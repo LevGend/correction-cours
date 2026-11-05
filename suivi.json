@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T19:30",
+    "mis_a_jour":  "2026-11-05T19:45",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -296,9 +296,9 @@
                                                                         "work/04_quiz.md"
                                                                     ],
                                                         "remarques":  "Ajout a posteriori (C20) sur le cours VMware",
-                                                        "controle":  "OK : 36/36 questions de révision appariées, 54 QCM en 3 séries de 18, réponses A=12 B=13 C=15 D=14, 42/42 concepts, aucun {{…}}, onglets / correction / Hub testés dans le navigateur (bureau et mobile)",
-                                                        "statut":  "en_cours",
-                                                        "tentatives":  "2"
+                                                        "tentatives":  "2",
+                                                        "statut":  "termine",
+                                                        "controle":  "OK (tentative 2) : 36 QCM de révision appariés 36/36, 54 QCM quiz en 3 séries de 18, 42/42 concepts, balises de couleur identiques, aucun {{…}}, scripts ASCII ; testé navigateur : carte du Hub cliquable, QCM de révision, Corriger/score/légende/réponses, aucune erreur console"
                                                     }
                                        },
                             "note":  "15,5",
@@ -517,6 +517,11 @@
                         "date":  "2026-11-05T19:30",
                         "acteur":  "orchestrateur",
                         "action":  "Professeur (quiz, opus) relancé : partie Révision en QCM. Publieur (opus, évolution du rendu : Hub, QCM, quiz ; opus car développement de fonctionnalités et non simple dépannage) lancé en parallèle"
+                    },
+                    {
+                        "date":  "2026-11-05T19:45",
+                        "acteur":  "orchestrateur",
+                        "action":  "Publieur (opus) : Hub, petites questions QCM, quiz et code couleur codés ; VMware republié (output/COURS_CORRECTION_IA_05112026_1723.html) et Hub régénéré"
                     }
                 ]
 }

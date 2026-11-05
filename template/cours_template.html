@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>{{TITRE}} – Correction IA</title>
+<meta name="cours-titre" content="{{TITRE_ATTR}}">
+<meta name="cours-date" content="{{DATE_ATTR}}">
+<meta name="cours-note" content="{{NOTE_ATTR}}">
+<meta name="cours-themes" content="{{META_THEMES}}">
+<meta name="cours-quiz" content="{{META_QUIZ}}">
+<meta name="cours-revision" content="{{META_REVISION}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
 <style>
@@ -31,11 +37,15 @@ a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
 /* ===== App bar ===== */
 .appbar{position:fixed;inset:0 0 auto 0;height:var(--appbar);z-index:20;display:flex;align-items:center;gap:20px;
   padding:0 24px;background:linear-gradient(90deg,#1a237e 0%,#283593 45%,#1d1d1f 100%);box-shadow:var(--shadow-2)}
-.appbar .menu{display:none;background:none;border:0;color:#fff;font-size:24px;cursor:pointer}
+.appbar .menu{display:none;background:none;border:0;color:#fff;font-size:24px;cursor:pointer;flex:none}
+.hub-btn{display:inline-flex;align-items:center;gap:8px;flex:none;height:36px;padding:0 14px 0 10px;border-radius:18px;color:#fff;
+  background:rgba(255,255,255,.10);font:500 13px var(--font);letter-spacing:.06em;text-transform:uppercase;transition:background .15s}
+.hub-btn:hover{background:rgba(255,255,255,.2);text-decoration:none}
+.hub-btn svg{width:20px;height:20px;flex:none}
 .brand{display:flex;flex-direction:column;line-height:1.2;min-width:0;flex:1}
 .brand b{font-weight:500;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .brand small{color:rgba(255,255,255,.65);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
-.tabs{margin-left:auto;display:flex;height:100%;flex:none}
+.tabs{margin-left:auto;display:flex;height:100%;flex:none;align-self:stretch}
 .tab{background:none;border:0;color:rgba(255,255,255,.7);font:500 14px var(--font);letter-spacing:.06em;text-transform:uppercase;
   padding:0 20px;cursor:pointer;position:relative;transition:color .2s}
 .tab:hover{color:#fff}
@@ -170,13 +180,85 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
 .bar{height:6px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin-top:4px;min-width:80px}
 .bar i{display:block;height:100%;background:var(--primary);border-radius:3px}
 
+/* ===== QCM : petites questions de révision (onglet Cours) et quiz =====
+   Code couleur de la CORRECTION (≠ provenance du texte) : vert ✓ juste, rouge ✗ faux, gris = sans réponse.
+   Toujours accompagné d'une icône et d'un encadré de la question, pour ne pas se confondre avec le rouge des corrections de notes. */
+:root{--q-ok:#4caf50; --q-ok-soft:rgba(76,175,80,.14); --q-ko:#ef5350; --q-ko-soft:rgba(239,83,80,.13); --q-none:#8a8a96}
+.qcm{background:var(--surface-2);border:1px solid var(--line);border-left:4px solid var(--primary);border-radius:var(--radius);padding:14px 18px 16px;transition:border-color .2s}
+.qcm.rev{margin:18px 0 6px;border-style:solid dashed dashed solid;border-left-style:solid}
+.qcm-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.qcm-kicker{font:500 11px var(--font);letter-spacing:.1em;text-transform:uppercase;color:var(--primary);display:inline-flex;align-items:center;gap:6px}
+.qcm-kicker::before{content:"?";width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--primary);color:#fff;font-size:11px;letter-spacing:0}
+section.sub.qcm{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+section.theme>h2+*+section.sub.qcm{margin-top:14px;border-top:1px solid var(--line)}
+section.sub.qcm>h3.qcm-head{font-size:15px;color:var(--text);margin-bottom:8px}
+.qcm-num{font:500 13px var(--font);background:var(--primary);color:#fff;border-radius:12px;padding:1px 10px}
+.qcm-tag{font:400 12px var(--font);color:var(--text-2);background:var(--surface-3);border-radius:12px;padding:2px 10px}
+.qcm-res{margin-left:auto;font:500 13px var(--font);border-radius:12px;padding:1px 10px}
+.qcm-res:empty{display:none}
+.qcm-q>:last-child{margin-bottom:10px}
+.qcm-opts{display:grid;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;transition:border-color .15s,background .15s;position:relative}
+.opt:hover{border-color:var(--text-3)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt-k{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:500 12px var(--font);background:var(--surface-3);color:var(--text-2);margin-top:1px}
+.opt-t{flex:1;min-width:0}
+.opt.sel{border-color:var(--primary);background:var(--primary-soft)}
+.opt.sel .opt-k{background:var(--primary);color:#fff}
+.opt input:focus-visible~.opt-k{outline:2px solid var(--primary);outline-offset:2px}
+.qcm.done .opt{cursor:default}
+.qcm.done .opt:not(.ok):not(.ko){opacity:.6}
+.opt.ok{border-color:var(--q-ok);background:var(--q-ok-soft);opacity:1}
+.opt.ok .opt-k{background:var(--q-ok);color:#fff;font-size:0}
+.opt.ok .opt-k::after{content:"✓";font-size:14px}
+.opt.ko{border-color:var(--q-ko);background:var(--q-ko-soft)}
+.opt.ko .opt-k{background:var(--q-ko);color:#fff;font-size:0}
+.opt.ko .opt-k::after{content:"✗";font-size:14px}
+.qcm.st-ok{border-color:var(--q-ok)} .qcm.st-ko{border-color:var(--q-ko)} .qcm.st-none{border-color:var(--q-none)}
+.qcm.st-ok .qcm-res{background:var(--q-ok-soft);color:var(--q-ok)}
+.qcm.st-ko .qcm-res{background:var(--q-ko-soft);color:var(--q-ko)}
+.qcm.st-none .qcm-res{background:var(--surface-3);color:var(--text-2)}
+.qcm-actions{display:flex;justify-content:flex-end;margin-top:12px}
+.qcm-expl{margin-top:12px;padding:10px 14px;border-radius:8px;background:var(--surface);border-left:3px solid var(--q-ok);font-size:15px;animation:fade .25s ease}
+.qcm-expl b{color:var(--q-ok);font-weight:500}
+.btn-qcm{padding:7px 18px;border-radius:18px;cursor:pointer;background:transparent;border:1px solid var(--text-3);color:var(--text);font:500 12px var(--font);letter-spacing:.06em;text-transform:uppercase;transition:background .15s,opacity .15s}
+.btn-qcm:hover{background:rgba(255,255,255,.06)}
+.btn-qcm.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn-qcm.primary:hover{background:#5c9bff}
+.btn-qcm:disabled{opacity:.4;cursor:not-allowed}
+.quiz-sub{color:var(--text-2);font-size:14px}
+.quiz-end>h3{margin-top:6px}
+.quiz-bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:14px}
+.quiz-score{font-size:15px;color:var(--text-2)}
+.quiz-score b{font-size:22px;font-weight:500;color:#fff;margin-right:4px}
+.btn-ans{margin:0 0 12px}
+.quiz-answers{animation:fade .25s ease}
+.quiz-answers td{font-size:14px}
+.quiz-answers .ans-q{white-space:nowrap}
+.quiz-answers .ans-r b{color:var(--q-ok);font-weight:500}
+.quiz-answers tr.st-ok .ans-q::after{content:" ✓";color:var(--q-ok)}
+.quiz-answers tr.st-ko .ans-q::after{content:" ✗";color:var(--q-ko)}
+.quiz-answers tr.st-none .ans-q::after{content:" –";color:var(--q-none)}
+.qcm-legend .mk{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;font-size:11px;color:#fff}
+.mk.ok{background:var(--q-ok)} .mk.ko{background:var(--q-ko)} .mk.none{background:var(--q-none)}
+.legend-note{font-size:13px;color:var(--text-3)!important;margin-top:10px!important}
+
 /* ===== Responsive ===== */
 @media (max-width:1100px){
   .appbar .menu{display:block}
   .toc{transform:translateX(-100%);transition:transform .25s;box-shadow:var(--shadow-2)}
   body.toc-open .toc{transform:none}
   .content{margin-left:0;padding:calc(var(--appbar) + 24px) 20px 60px}
-  .tab{padding:0 10px;font-size:12px} .chip-score,.brand small{display:none}
+  .tab{padding:0 10px;font-size:12px} .brand small{display:none}
+}
+@media (max-width:700px){ table{display:block;overflow-x:auto;max-width:100%} .page a{overflow-wrap:anywhere} .chip-score{display:none} .hub-btn span{display:none} .hub-btn{padding:0 8px} }
+@media (max-width:560px){
+  .appbar{gap:8px;padding:0 10px}
+  .tab{padding:0 9px;font-size:11.5px;letter-spacing:.03em}
+  .tab .tab-long{display:none}
+  .brand b{font-size:15px}
+  .tab.active::after{left:6px;right:6px}
+  .qcm{padding:12px 12px 14px}
 }
 @media (max-width:700px){ .toc{width:100%;grid-template-columns:42% 58%} .eval-head,.cards-2{grid-template-columns:1fr} section.theme{padding:22px 18px} .tpe{grid-template-columns:1fr;gap:6px} .tpe-label{justify-self:start} }
 @media print{ .appbar,.toc,.btn-ex{display:none!important} .content{margin:0;padding:0} .page{display:block!important} .tpe[hidden]{display:grid} }
@@ -186,12 +268,14 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
 
 <header class="appbar">
   <button class="menu" aria-label="Sommaire" onclick="document.body.classList.toggle('toc-open')">☰</button>
+  <a class="hub-btn" href="index.html" title="Retour au Hub (tous les cours)" aria-label="Retour au Hub"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg><span>Hub</span></a>
   <div class="brand"><b>{{TITRE}}</b><small>Notes corrigées · {{DATE}}</small></div>
+  <span class="chip-score">{{NOTE}}/20</span>
   <nav class="tabs">
     <button class="tab active" data-page="page-cours">Cours</button>
-    <button class="tab" data-page="page-eval">Évaluation &amp; plus loin</button>
+    <!-- QUIZ-TAB:DEBUT (retiré par le publieur s'il n'y a pas de quiz) --><button class="tab" data-page="page-quiz">Quiz</button><!-- QUIZ-TAB:FIN -->
+    <button class="tab" data-page="page-eval" title="Bilan &amp; plus loin">Bilan<span class="tab-long"> &amp; plus loin</span></button>
   </nav>
-  <span class="chip-score">{{NOTE}}/20</span>
 </header>
 
 <aside class="toc" id="toc">
@@ -237,7 +321,36 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
   <!-- CONTENU-COURS:FIN -->
 </main>
 
-<!-- ================= PAGE 2 : ÉVALUATION ================= -->
+<!-- PAGE-QUIZ:DEBUT (page retirée par le publieur s'il n'y a pas de quiz) -->
+<!-- ================= PAGE 2 : QUIZ ================= -->
+<main class="page" id="page-quiz">
+  <div class="hero">
+    <h1>Quiz</h1>
+    <p>{{QUIZ_RESUME}} · réponses et explications à la fin de chaque série</p>
+    <div class="legend qcm-legend">
+      <span class="chip static"><span class="mk ok">✓</span>Bonne réponse</span>
+      <span class="chip static"><span class="mk ko">✗</span>Réponse fausse</span>
+      <span class="chip static"><span class="mk none">–</span>Sans réponse (la bonne est montrée en vert)</span>
+    </div>
+    <p class="legend-note">Ici, et dans les questions de révision du cours, les couleurs indiquent la correction de tes réponses, pas la provenance du texte.</p>
+  </div>
+  <!-- CONTENU-QUIZ:DEBUT (le publieur remplace tout ce bloc) -->
+  <section class="theme quiz-serie" id="q-1"><h2>QCM 1</h2>
+    <section class="sub qcm quiz" id="q-1-1" data-answer="B" data-label="Q1 · Démo"><h3 class="qcm-head"><span class="qcm-num">Q1</span><span class="qcm-tag">Démo</span><span class="qcm-res"></span></h3>
+      <div class="qcm-q"><p>Question de démonstration ?</p></div>
+      <div class="qcm-opts"><label class="opt" data-v="A"><input type="radio" name="q-1-1" value="A" autocomplete="off"><span class="opt-k">A</span><span class="opt-t">Non</span></label><label class="opt" data-v="B"><input type="radio" name="q-1-1" value="B" autocomplete="off"><span class="opt-k">B</span><span class="opt-t">Oui</span></label></div>
+    </section>
+    <section class="sub quiz-end" id="q-1-fin" data-label="Correction et réponses"><h3>Correction et réponses</h3>
+      <div class="quiz-bar"><button type="button" class="btn-qcm primary quiz-check">Corriger</button><button type="button" class="btn-qcm quiz-reset">Recommencer</button><span class="quiz-score"></span></div>
+      <button type="button" class="btn-ex btn-ans" aria-expanded="false">Afficher les réponses</button>
+      <div class="quiz-answers" hidden><table><thead><tr><th>Question</th><th>Réponse</th><th>Explication</th></tr></thead><tbody><tr data-for="q-1-1"><td class="ans-q">Q1</td><td class="ans-r"><b>B)</b> Oui</td><td>…</td></tr></tbody></table></div>
+    </section>
+  </section>
+  <!-- CONTENU-QUIZ:FIN -->
+</main>
+<!-- PAGE-QUIZ:FIN -->
+
+<!-- ================= PAGE 3 : BILAN ================= -->
 <main class="page" id="page-eval">
   <!-- CONTENU-EVAL:DEBUT (le publieur remplace tout ce bloc) -->
   <section class="theme" id="e-1"><h2>Évaluation</h2>
@@ -301,7 +414,10 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
     $$(':scope > section.sub', t).forEach((s, j) => {
       if (!s.id) s.id = t.id + '-' + (j + 1);
       const li = document.createElement('li');
-      li.innerHTML = `<a href="#${s.id}" data-sub="${s.id}">${$('h3', s).textContent.trim()}</a>`;
+      const a = document.createElement('a');
+      a.href = '#' + s.id; a.dataset.sub = s.id;
+      a.textContent = s.dataset.label || $(':scope > h3', s).textContent.trim();
+      li.appendChild(a);
       li.firstChild.addEventListener('click', e => { e.preventDefault(); goto(s); setTheme(t); markSub(s.id); });
       subsUl.appendChild(li);
     });
@@ -335,7 +451,7 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
   }
   addEventListener('scroll', () => requestAnimationFrame(onScroll), { passive: true });
 
-  // Onglets Cours / Évaluation
+  // Onglets Cours / Quiz / Bilan
   function showPage(id) {
     $$('.page').forEach(p => p.classList.toggle('active', p.id === id));
     $$('.tab').forEach(b => b.classList.toggle('active', b.dataset.page === id));
@@ -390,10 +506,76 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
   // Étiquette de langage sur les blocs de code
   $$('pre > code[class*="lang-"]').forEach(c => c.parentElement.dataset.lang = c.className.match(/lang-(\S+)/)[1]);
 
-  // Ouverture directe sur une ancre
-  const target = location.hash && document.getElementById(location.hash.slice(1));
-  if (target && target.closest('#page-eval')) showPage('page-eval'); else buildTitles();
-  if (target) setTimeout(() => target.scrollIntoView(), 50);
+  // ===== QCM : petites questions de révision (Cours) et séries du Quiz =====
+  const RES = { ok: '✓ Juste', ko: '✗ Faux', none: '– Sans réponse' };
+  const qcms = $$('.qcm');
+  const markSel = card => $$('.opt', card).forEach(o => o.classList.toggle('sel', $('input', o).checked));
+  const clearQcm = card => {
+    card.classList.remove('done', 'st-ok', 'st-ko', 'st-none');
+    $$('.opt', card).forEach(o => o.classList.remove('ok', 'ko', 'sel'));
+    $$('input', card).forEach(i => { i.checked = false; i.disabled = false; });
+    const r = $('.qcm-res', card); if (r) r.textContent = '';
+    const ex = $('.qcm-expl', card); if (ex) ex.hidden = true;
+    const v = $('.qcm-validate', card); if (v) { v.textContent = 'Valider'; v.disabled = true; v.classList.add('primary'); }
+  };
+  const gradeQcm = card => {
+    const ans = card.dataset.answer, sel = $('input:checked', card), v = sel ? sel.value : '';
+    const st = !v ? 'none' : v === ans ? 'ok' : 'ko';
+    $$('.opt', card).forEach(o => {
+      o.classList.toggle('ok', o.dataset.v === ans);
+      o.classList.toggle('ko', o.dataset.v === v && v !== ans);
+      o.classList.remove('sel');
+    });
+    $$('input', card).forEach(i => i.disabled = true);
+    card.classList.remove('st-ok', 'st-ko', 'st-none');
+    card.classList.add('done', 'st-' + st);
+    const r = $('.qcm-res', card); if (r) r.textContent = RES[st];
+    return st;
+  };
+  qcms.forEach(card => {
+    const v = $('.qcm-validate', card);
+    card.addEventListener('change', () => { markSel(card); if (v) v.disabled = false; });
+    if (v) v.addEventListener('click', () => {
+      if (card.classList.contains('done')) { clearQcm(card); return; }
+      gradeQcm(card); $('.qcm-expl', card).hidden = false; v.textContent = 'Recommencer'; v.classList.remove('primary');
+    });
+  });
+  const series = $$('.quiz-serie').map(sec => {
+    const cards = $$('.qcm', sec), score = $('.quiz-score', sec), box = $('.quiz-answers', sec), btn = $('.btn-ans', sec);
+    const showAns = open => {
+      if (!box) return;
+      box.hidden = !open; btn.setAttribute('aria-expanded', open);
+      btn.textContent = open ? 'Masquer les réponses' : 'Afficher les réponses';
+    };
+    const reset = () => {
+      cards.forEach(clearQcm); if (score) score.textContent = ''; showAns(false);
+      $$('tr[data-for]', sec).forEach(tr => tr.className = '');
+    };
+    if (btn) btn.addEventListener('click', () => showAns(box.hidden));
+    $('.quiz-check', sec).addEventListener('click', () => {
+      const res = cards.map(gradeQcm);
+      res.forEach((st, k) => { const tr = $(`tr[data-for="${cards[k].id}"]`, sec); if (tr) tr.className = 'st-' + st; });
+      const ok = res.filter(r => r === 'ok').length, none = res.filter(r => r === 'none').length;
+      score.innerHTML = `<b>${ok} / ${cards.length}</b>` + (none ? ` · ${none} sans réponse` : ' · toutes les questions ont une réponse');
+      showAns(true);
+    });
+    $('.quiz-reset', sec).addEventListener('click', () => { reset(); goto(sec); });
+    return reset;
+  });
+  // Les réponses cochées ne sont jamais restaurées (rechargement, retour arrière)
+  const resetAll = () => { qcms.forEach(clearQcm); series.forEach(r => r()); };
+  resetAll();
+  addEventListener('pageshow', e => { if (e.persisted) resetAll(); });
+
+  // Ouverture directe sur une ancre (#t-…, #q-…, #e-…) : affiche l'onglet qui la contient
+  function openHash(smooth) {
+    const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    const pg = target && target.closest('.page');
+    if (pg && pg !== page) showPage(pg.id); else if (!themes.length) buildTitles();
+    if (target) setTimeout(() => target.scrollIntoView(smooth ? { behavior: 'smooth' } : undefined), 50);
+  }
+  addEventListener('hashchange', () => openHash(true));
+  openHash(false);
 })();
 </script>
 </body>

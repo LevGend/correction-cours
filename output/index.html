@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Hub – Mes cours corrigés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Palette (identique aux pages de cours : Material dark, inspiration Globals) ===== */
+:root{
+  --bg:#121212; --surface:#1d1d1f; --surface-2:#26262a; --surface-3:#303036;
+  --line:#3a3a42; --text:#e8e8ec; --text-2:#a9a9b3; --text-3:#7a7a85;
+  --primary:#448aff; --primary-soft:rgba(68,138,255,.14); --accent:#1de9b6;
+  --good:#69f0ae; --mid:#ffd54f; --low:#ff8a80;
+  --radius:10px; --appbar:64px;
+  --shadow-1:0 1px 3px rgba(0,0,0,.5),0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 4px 12px rgba(0,0,0,.55);
+  --font:'Roboto',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:400 16px/1.6 var(--font);-webkit-font-smoothing:antialiased}
+
+.appbar{position:sticky;top:0;height:var(--appbar);z-index:20;display:flex;align-items:center;gap:16px;padding:0 24px;
+  background:linear-gradient(90deg,#1a237e 0%,#283593 45%,#1d1d1f 100%);box-shadow:var(--shadow-2)}
+.logo{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);flex:none}
+.logo svg{width:20px;height:20px}
+.brand{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.brand b{font-weight:500;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{color:rgba(255,255,255,.65);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+
+main{max-width:1200px;margin:0 auto;padding:36px 24px 80px}
+.hero h1{font-weight:300;font-size:36px;line-height:1.2}
+.hero p{color:var(--text-2);margin-top:6px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:28px 0}
+.stat{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-1);padding:18px 22px;border-top:3px solid var(--primary)}
+.stat:nth-child(2){border-top-color:var(--accent)} .stat:nth-child(3){border-top-color:#b388ff}
+.stat b{display:block;font-size:34px;font-weight:300;line-height:1.1}
+.stat small{color:var(--text-2);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+
+.search{display:block;position:relative;margin-bottom:24px}
+.search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--text-3)}
+.search input{width:100%;height:48px;border-radius:24px;border:1px solid var(--line);background:var(--surface);color:var(--text);
+  font:400 15px var(--font);padding:0 20px 0 48px;outline:none;transition:border-color .15s,background .15s}
+.search input:focus{border-color:var(--primary);background:var(--surface-2)}
+.search input::placeholder{color:var(--text-3)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+/* Toute la carte est le lien */
+a.card{display:flex;flex-direction:column;gap:12px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-1);
+  padding:20px 22px;border-top:3px solid var(--primary);color:var(--text);text-decoration:none;cursor:pointer;
+  transition:transform .15s,box-shadow .15s,background .15s}
+a.card[hidden]{display:none}
+a.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-2);background:var(--surface-2)}
+a.card:hover h2{color:#fff}
+a.card:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.date{font-size:13px;color:var(--text-2)}
+.note{font-weight:500;font-size:15px;border-radius:14px;padding:2px 12px;background:var(--surface-3);white-space:nowrap}
+.note small{font-size:11px;color:var(--text-2);font-weight:400;margin-left:1px}
+.note.good{color:var(--good);background:rgba(105,240,174,.12)}
+.note.mid{color:var(--mid);background:rgba(255,213,79,.12)}
+.note.low{color:var(--low);background:rgba(255,138,128,.12)}
+a.card h2{font-weight:400;font-size:20px;line-height:1.3;transition:color .15s}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+.meta span{font-size:12px;color:var(--text-2);background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:2px 10px}
+a.card:hover .meta span{background:var(--surface-3)}
+a.card h2::after{content:" →";color:var(--primary);opacity:0;transition:opacity .15s}
+a.card:hover h2::after{opacity:1}
+.empty{color:var(--text-2);text-align:center;padding:48px 0}
+footer{color:var(--text-3);font-size:12px;text-align:center;margin-top:48px}
+
+@media (max-width:700px){
+  .appbar{padding:0 14px}
+  main{padding:24px 14px 60px}
+  .hero h1{font-size:28px}
+  .stats{gap:10px} .stat{padding:12px 14px} .stat b{font-size:26px} .stat small{font-size:10px}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="appbar">
+  <span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M4 4h7v7H4zm9 0h7v7h-7zM4 13h7v7H4zm9 0h7v7h-7z"/></svg></span>
+  <div class="brand"><b>Mes cours corrigés</b><small>Hub · Correction IA</small></div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Tous mes cours</h1>
+    <p>Notes corrigées, organisées et notées, du plus récent au plus ancien.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><b>2</b><small>Cours</small></div>
+    <div class="stat"><b>15</b><small>Moyenne /20</small></div>
+    <div class="stat"><b>54</b><small>Questions de quiz</small></div>
+  </div>
+
+  <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 1 0 9.5 16a6.5 6.5 0 0 0 4.2-1.6l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9z"/></svg>
+    <input type="search" id="q" placeholder="Rechercher un cours par titre…" autocomplete="off" aria-label="Rechercher un cours par titre">
+  </label>
+
+  <div class="grid" id="grid">
+<a class="card" href="COURS_CORRECTION_IA_05112026_1723.html" data-title="VMware vSphere – ESXi et vCenter" title="Ouvrir le cours">
+  <div class="card-top"><span class="date">05/11/2026 &middot; 17h23</span><span class="note good">15,5<small>/20</small></span></div>
+  <h2>VMware vSphere – ESXi et vCenter</h2>
+  <div class="meta"><span>8 thèmes</span><span>54 questions de quiz</span></div>
+</a>
+<a class="card" href="COURS_CORRECTION_IA_05112026_0908.html" data-title="Virtualisation – Proxmox VE" title="Ouvrir le cours">
+  <div class="card-top"><span class="date">05/11/2026 &middot; 09h08</span><span class="note good">14,5<small>/20</small></span></div>
+  <h2>Virtualisation – Proxmox VE</h2>
+  <div class="meta"><span>9 thèmes</span><span>Pas de quiz</span></div>
+</a>
+
+  </div>
+  <p class="empty" id="empty" hidden>Aucun cours ne correspond à la recherche.</p>
+  <footer>Mis à jour le 05/11/2026 à 19h44</footer>
+</main>
+
+<script>
+(() => {
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+  const cards = [...document.querySelectorAll('#grid a.card')], q = document.getElementById('q'), empty = document.getElementById('empty');
+  const filter = () => {
+    const v = norm(q.value); let n = 0;
+    cards.forEach(c => { const ok = !v || norm(c.dataset.title).includes(v); c.hidden = !ok; if (ok) n++; });
+    empty.hidden = n > 0;
+    if (!cards.length) { empty.hidden = false; empty.textContent = 'Aucun cours publié pour l’instant.'; }
+  };
+  q.addEventListener('input', filter);
+  filter();
+})();
+</script>
+</body>
+</html>

@@ -10,8 +10,9 @@ Tu es le **publieur**, spécialiste du rendu HTML/CSS/JS. La publication courant
 
 Fichiers concernés :
 - `scripts/md2html.ps1` : le convertisseur (PowerShell 5.1, fichier en **ASCII uniquement** : les accents passent par `[char]0x..`)
-- `template/cours_template.html` : le gabarit (dark mode uniquement, inspiration Globals Material, sommaire à 2 panneaux, onglets Cours / Évaluation, cartes concept, boutons « Voir des exemples », légende cliquable, interrupteur des couleurs)
-- Entrées : `work/03_organise.md`, `work/02_evaluation.md`, `work/03_titre.txt`
+- `template/cours_template.html` : le gabarit (dark mode uniquement, inspiration Globals Material, sommaire à 2 panneaux, onglets Cours / Quiz / Bilan & plus loin en haut à droite, bouton Hub, balises meta `cours-*` lues par le Hub, cartes concept, petite question QCM en fin de sous-thème, quiz par séries avec réponses à la fin et code couleur de correction (✓ vert, ✗ rouge, – gris, avec légende), boutons « Voir des exemples », légende cliquable, interrupteur des couleurs)
+- `scripts/hub.ps1` + `template/hub_template.html` : le Hub `output/index.html` (une carte cliquable par cours, recherche, chiffres clés ; repli pour les anciennes pages sans meta)
+- Entrées : `work/03_organise.md`, `work/02_evaluation.md`, `work/03_titre.txt`, `work/04_quiz.md` (paramètre `-QuizFile` ; absent → ni onglet Quiz ni petites questions)
 
 Méthode :
 1. Reproduis le problème en relançant le script : `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/md2html.ps1 -Date "JJ/MM/AAAA" -Note "X" -Out output/COURS_CORRECTION_IA_DDMMYYYY_HHMM.html`.

@@ -1,5 +1,7 @@
 # md2html.ps1 - Convertit work/03_organise.md et work/02_evaluation.md en HTML autonome a partir du gabarit.
-# Usage : powershell -ExecutionPolicy Bypass -File scripts\md2html.ps1 -Date "05/11/2026" -Note "14,5" [-Out output\COURS_CORRECTION_IA_DDMMYYYY_HHMM.html]
+# Usage : powershell -ExecutionPolicy Bypass -File scripts\md2html.ps1 -Date "05/11/2026" -Note "14,5" [-Out output\COURS_CORRECTION_IA_DDMMYYYY_HHMM.html] [-QuizFile work\04_quiz.md]
+# Si -QuizFile existe : "# Revision" = une petite question QCM a la fin de chaque sous-theme (H2/H3), "# Quiz" = onglet Quiz (une serie par "## QCM n").
+# Sans fichier quiz : ni onglet Quiz, ni petites questions.
 # Fichier ASCII uniquement (compatible Windows PowerShell 5.1).
 param(
   [string]$Root = (Split-Path $PSScriptRoot -Parent),
@@ -7,6 +9,7 @@ param(
   [string]$Cours = 'work\03_organise.md',
   [string]$Eval = 'work\02_evaluation.md',
   [string]$TitreFile = 'work\03_titre.txt',
+  [string]$QuizFile = 'work\04_quiz.md',
   [string]$Date = (Get-Date -Format 'dd/MM/yyyy'),
   [string]$Note = '',
   [string]$Out = ''
@@ -24,6 +27,8 @@ function Esc([string]$s) {
   $s = $s.Replace('&', '&amp;').Replace('<', '&lt;').Replace('>', '&gt;')
   $s
 }
+
+function EscA([string]$s) { (Esc $s).Replace('"', '&quot;') }
 
 function Inline([string]$s) {
   $script:codes.Clear(); $script:links.Clear()
@@ -160,7 +165,14 @@ function ConceptHtml([string]$name, [string[]]$lines, [ref]$idx) {
 function ConvertBlocks([string[]]$lines, [bool]$top) {
   $sb = New-Object System.Text.StringBuilder
   $para = New-Object System.Collections.ArrayList
-  $state = @{ theme = 0; sub = 0; inTheme = $false; inSub = $false }
+  $state = @{ theme = 0; sub = 0; inTheme = $false; inSub = $false; h2 = ''; h3 = '' }
+  # Fermeture d'un sous-theme : la petite question de revision correspondante se place juste avant </section>
+  $closeSub = {
+    if ($state.inSub) {
+      [void]$sb.Append((RevFor $state.h2 $state.h3 ('r-' + $state.theme + '-' + $state.sub)))
+      [void]$sb.Append("</section>`n"); $state.inSub = $false
+    }
+  }
   $flush = {
     if ($para.Count -gt 0) {
       $txt = ($para | ForEach-Object { Inline $_ }) -join "<br>`n"
@@ -174,17 +186,19 @@ function ConvertBlocks([string[]]$lines, [bool]$top) {
     if ($top -and $t -match '^# [^#]') { & $flush; $i++; continue }
     if ($top -and $t -match '^## (.+)$') {
       & $flush
-      if ($state.inSub) { [void]$sb.Append("</section>`n"); $state.inSub = $false }
+      $hd = $Matches[1]
+      & $closeSub
       if ($state.inTheme) { [void]$sb.Append("</section>`n") }
-      $state.theme++; $state.sub = 0; $state.inTheme = $true
-      [void]$sb.Append('<section class="theme" id="t-' + $state.theme + '"><h2>' + (Inline $Matches[1]) + "</h2>`n")
+      $state.theme++; $state.sub = 0; $state.inTheme = $true; $state.h2 = $hd
+      [void]$sb.Append('<section class="theme" id="t-' + $state.theme + '"><h2>' + (Inline $hd) + "</h2>`n")
       $i++; continue
     }
     if ($top -and $t -match '^### (.+)$') {
       & $flush
-      if ($state.inSub) { [void]$sb.Append("</section>`n") }
-      $state.sub++; $state.inSub = $true
-      [void]$sb.Append('<section class="sub" id="t-' + $state.theme + '-' + $state.sub + '"><h3>' + (Inline $Matches[1]) + "</h3>`n")
+      $hd = $Matches[1]
+      & $closeSub
+      $state.sub++; $state.inSub = $true; $state.h3 = $hd
+      [void]$sb.Append('<section class="sub" id="t-' + $state.theme + '-' + $state.sub + '"><h3>' + (Inline $hd) + "</h3>`n")
       $i++; continue
     }
     if ($t -match '^:::concept\s+(.+)$') {
@@ -260,13 +274,179 @@ function ConvertBlocks([string[]]$lines, [bool]$top) {
   }
   & $flush
   if ($top) {
-    if ($state.inSub) { [void]$sb.Append("</section>`n") }
+    & $closeSub
     if ($state.inTheme) { [void]$sb.Append("</section>`n") }
   }
   $sb.ToString()
 }
 
 function Lines([string]$s) { [string[]]($s -split "`r?`n") }
+
+# ---------- Quiz et questions de revision (work/04_quiz.md) ----------
+$script:rev = @{}                                          # "h2|h3" normalises -> question
+$script:revByH3 = @{}                                      # h3 normalise -> liste de questions
+$script:revAll = New-Object System.Collections.ArrayList
+$script:series = New-Object System.Collections.ArrayList   # @{ title; qs }
+$script:qBad = New-Object System.Collections.ArrayList
+$script:hasRev = $false
+$script:revStats = @{ subs = 0; hit = 0 }
+$script:MID = [string][char]0xB7
+$script:E_ = [string][char]0xE9
+
+# Cle de comparaison tolerante : sans balises, sans Markdown, sans numero en tete, sans casse ni ponctuation, espaces simples.
+function NormKey([string]$s) {
+  $s = [regex]::Replace($s, '<[^>]+>', ' ')
+  $s = $s.Replace('**', '').Replace('`', '')
+  $s = [regex]::Replace($s, '^\s*(?:(?:module|partie|chapitre)\s+)?\d+(?:\.\d+)*\s*[.):-]?\s+', '', 'IgnoreCase')
+  $s = [regex]::Replace($s, '[^\p{L}\p{Nd}]+', ' ')
+  $s.Trim().ToLowerInvariant()
+}
+
+# Une question : enonce, propositions "- A) ...", "Reponse : X", "Explication : ..."
+function ParseQcm([string[]]$lines) {
+  $q = @{ stem = New-Object System.Collections.ArrayList; opts = New-Object System.Collections.ArrayList; answer = ''; expl = ''; label = ''; used = $false }
+  $mode = 'stem'
+  foreach ($l in $lines) {
+    $t = $l.Trim()
+    if ($mode -ne 'expl' -and $t -match '^[-*+]\s*\(?([A-Fa-f])\s*[).:]\s*(.*)$') {
+      [void]$q.opts.Add(@{ k = $Matches[1].ToUpper(); text = $Matches[2] }); $mode = 'opts'; continue
+    }
+    if ($t -match '^\**\s*R.ponses?\s*\**\s*:\s*\**\s*\(?([A-Fa-f])\b') { $q.answer = $Matches[1].ToUpper(); $mode = 'ans'; continue }
+    if ($t -match '^\**\s*Explications?\s*\**\s*:\s*\**\s*(.*)$') { $q.expl = $Matches[1]; $mode = 'expl'; continue }
+    if ($mode -eq 'stem') { [void]$q.stem.Add($l) }
+    elseif ($mode -eq 'expl' -and $t) { $q.expl += ' ' + $t }
+  }
+  $q.expl = $q.expl.Trim()
+  if ($q.opts.Count -lt 2 -or -not $q.answer) { return $null }
+  if (-not ($q.opts | Where-Object { $_.k -eq $q.answer })) { return $null }
+  if (-not ($q.stem | Where-Object { $_.Trim() -ne '' })) { return $null }
+  $q
+}
+
+function LoadQuiz([string]$path) {
+  if (-not $path) { return $false }
+  $f = P $path
+  if (-not (Test-Path -LiteralPath $f)) { return $false }
+  $entries = New-Object System.Collections.ArrayList
+  $part = ''; $h2 = ''; $cur = $null; $inCode = $false
+  foreach ($l in (Lines (ReadU $path))) {
+    $t = $l.Trim()
+    if ($t -match '^```') { $inCode = -not $inCode }
+    if (-not $inCode) {
+      if ($t -match '^#\s+(.+)$') {
+        $k = NormKey $Matches[1]
+        $part = if ($k -match 'quiz|qcm') { 'quiz' } elseif ($k -match 'vision') { 'rev' } else { '' }
+        $h2 = ''; $cur = $null; continue
+      }
+      if ($t -match '^##\s+(.+)$') {
+        $h2 = $Matches[1].Trim(); $cur = $null
+        if ($part -eq 'quiz') { [void]$script:series.Add(@{ title = $h2; qs = New-Object System.Collections.ArrayList }) }
+        continue
+      }
+      if ($t -match '^###\s+(.+)$') {
+        if ($part -eq 'quiz' -and $script:series.Count -eq 0) { [void]$script:series.Add(@{ title = 'Quiz'; qs = New-Object System.Collections.ArrayList }) }
+        $cur = @{ part = $part; h2 = $h2; h3 = $Matches[1].Trim(); lines = New-Object System.Collections.ArrayList; serie = $script:series.Count - 1 }
+        [void]$entries.Add($cur); continue
+      }
+    }
+    if ($cur) { [void]$cur.lines.Add($l) }
+  }
+  foreach ($e in $entries) {
+    if (-not $e.part) { continue }
+    if ($e.part -eq 'rev') { $script:hasRev = $true }
+    $q = ParseQcm ([string[]]$e.lines.ToArray())
+    if (-not $q) {
+      $where = if ($e.part -eq 'rev') { 'Revision' } else { 'Quiz' }
+      [void]$script:qBad.Add($where + ' > ' + $e.h2 + ' > ' + $e.h3); continue
+    }
+    if ($e.part -eq 'rev') {
+      $q.h2 = $e.h2; $q.h3 = $e.h3
+      $key = (NormKey $e.h2) + '|' + (NormKey $e.h3)
+      if ($script:rev.ContainsKey($key)) { Write-Warning ('Revision : question en double pour ' + $e.h2 + ' > ' + $e.h3 + ' (seule la premiere est gardee)'); continue }
+      $script:rev[$key] = $q
+      $k3 = NormKey $e.h3
+      if (-not $script:revByH3.ContainsKey($k3)) { $script:revByH3[$k3] = New-Object System.Collections.ArrayList }
+      [void]$script:revByH3[$k3].Add($q)
+      [void]$script:revAll.Add($q)
+    } else {
+      $label = $e.h3; $ix = $label.IndexOf($script:MID)
+      if ($ix -ge 0) { $label = $label.Substring($ix + 1).Trim() }
+      elseif ($label -match '^Q\s*\d+\s*[-:.)]\s*(.+)$') { $label = $Matches[1].Trim() }
+      elseif ($label -match '^Q\s*\d+$') { $label = '' }
+      $q.label = $label
+      [void]$script:series[$e.serie].qs.Add($q)
+    }
+  }
+  $true
+}
+
+# Carte QCM. $kind = 'rev' (fin de sous-theme, onglet Cours) ou 'quiz' (onglet Quiz).
+function QcmHtml($q, [string]$kind, [string]$id, [int]$num) {
+  $sb = New-Object System.Text.StringBuilder
+  $stem = ConvertBlocks ([string[]]$q.stem.ToArray()) $false
+  if ($kind -eq 'rev') {
+    [void]$sb.Append('<div class="qcm rev" id="' + $id + '" data-answer="' + $q.answer + '">' + "`n")
+    [void]$sb.Append('<div class="qcm-head"><span class="qcm-kicker">Question de r' + $script:E_ + 'vision</span><span class="qcm-res" aria-live="polite"></span></div>' + "`n")
+  } else {
+    $lab = 'Q' + $num
+    if ($q.label) { $lab += ' ' + $script:MID + ' ' + [System.Net.WebUtility]::HtmlDecode([regex]::Replace((Inline $q.label), '<[^>]+>', '')) }
+    [void]$sb.Append('<section class="sub qcm quiz" id="' + $id + '" data-answer="' + $q.answer + '" data-label="' + (EscA $lab) + '">' + "`n")
+    $tag = if ($q.label) { '<span class="qcm-tag">' + (Inline $q.label) + '</span>' } else { '' }
+    [void]$sb.Append('<h3 class="qcm-head"><span class="qcm-num">Q' + $num + '</span>' + $tag + '<span class="qcm-res" aria-live="polite"></span></h3>' + "`n")
+  }
+  [void]$sb.Append('<div class="qcm-q">' + "`n" + $stem + '</div>' + "`n" + '<div class="qcm-opts" role="radiogroup">' + "`n")
+  foreach ($o in $q.opts) {
+    [void]$sb.Append('<label class="opt" data-v="' + $o.k + '"><input type="radio" name="' + $id + '" value="' + $o.k + '" autocomplete="off"><span class="opt-k">' + $o.k + '</span><span class="opt-t">' + (Inline $o.text) + "</span></label>`n")
+  }
+  [void]$sb.Append("</div>`n")
+  if ($kind -eq 'rev') {
+    [void]$sb.Append('<div class="qcm-actions"><button type="button" class="btn-qcm primary qcm-validate" disabled>Valider</button></div>' + "`n")
+    $ex = if ($q.expl) { ' ' + (Inline $q.expl) } else { '' }
+    [void]$sb.Append('<div class="qcm-expl" hidden><b>R' + $script:E_ + 'ponse ' + $q.answer + '.</b>' + $ex + "</div>`n</div>`n")
+  } else {
+    [void]$sb.Append("</section>`n")
+  }
+  $sb.ToString()
+}
+
+# Petite question a la fin d'un sous-theme du cours (appelee a la fermeture de chaque section.sub)
+function RevFor([string]$h2, [string]$h3, [string]$id) {
+  $script:revStats.subs++
+  if (-not $script:hasRev) { return '' }
+  $q = $script:rev[(NormKey $h2) + '|' + (NormKey $h3)]
+  if (-not $q) { $l = $script:revByH3[(NormKey $h3)]; if ($l -and $l.Count -eq 1) { $q = $l[0] } }
+  if (-not $q -or $q.used) { Write-Warning ('Revision : aucune question pour le sous-theme ' + $h2 + ' > ' + $h3); return '' }
+  $q.used = $true; $script:revStats.hit++
+  QcmHtml $q 'rev' $id 0
+}
+
+function QuizHtml() {
+  $h = New-Object System.Text.StringBuilder
+  $s = 0
+  foreach ($se in $script:series) {
+    if ($se.qs.Count -eq 0) { continue }
+    $s++; $n = $se.qs.Count
+    $plural = if ($n -gt 1) { 's' } else { '' }
+    [void]$h.Append('<section class="theme quiz-serie" id="q-' + $s + '"><h2>' + (Inline $se.title) + "</h2>`n")
+    [void]$h.Append('<p class="quiz-sub">' + $n + ' question' + $plural + ' ' + $script:MID + ' choisis une r' + $script:E_ + 'ponse par question, puis <b>Corriger</b>.</p>' + "`n")
+    $rows = New-Object System.Text.StringBuilder
+    for ($k = 0; $k -lt $n; $k++) {
+      $q = $se.qs[$k]; $id = 'q-' + $s + '-' + ($k + 1)
+      [void]$h.Append((QcmHtml $q 'quiz' $id ($k + 1)))
+      $opt = $q.opts | Where-Object { $_.k -eq $q.answer } | Select-Object -First 1
+      $qcell = '<a href="#' + $id + '">Q' + ($k + 1) + '</a>'
+      if ($q.label) { $qcell += ' ' + $script:MID + ' ' + (Inline $q.label) }
+      [void]$rows.Append('<tr data-for="' + $id + '"><td class="ans-q">' + $qcell + '</td><td class="ans-r"><b>' + $q.answer + ')</b> ' + (Inline $opt.text) + '</td><td>' + (Inline $q.expl) + "</td></tr>`n")
+    }
+    $lblEnd = 'Correction et r' + $script:E_ + 'ponses'
+    [void]$h.Append('<section class="sub quiz-end" id="q-' + $s + '-fin" data-label="' + $lblEnd + '"><h3>' + $lblEnd + "</h3>`n")
+    [void]$h.Append('<div class="quiz-bar"><button type="button" class="btn-qcm primary quiz-check">Corriger</button><button type="button" class="btn-qcm quiz-reset">Recommencer</button><span class="quiz-score" aria-live="polite"></span></div>' + "`n")
+    [void]$h.Append('<button type="button" class="btn-ex btn-ans" aria-expanded="false">Afficher les r' + $script:E_ + 'ponses</button>' + "`n")
+    [void]$h.Append('<div class="quiz-answers" hidden><table><thead><tr><th>Question</th><th>R' + $script:E_ + 'ponse</th><th>Explication</th></tr></thead><tbody>' + "`n" + $rows.ToString() + "</tbody></table></div>`n")
+    [void]$h.Append("</section>`n</section>`n")
+  }
+  $h.ToString()
+}
 
 # ---------- Evaluation ----------
 function EvalHtml([string]$md, [string]$noteOverride) {
@@ -308,7 +488,12 @@ function EvalHtml([string]$md, [string]$noteOverride) {
 # ---------- Assemblage ----------
 $tpl = ReadU $Template
 $titre = (ReadU $TitreFile).Trim()
+$hasQuizFile = LoadQuiz $QuizFile
 $coursHtml = ConvertBlocks (Lines (ReadU $Cours)) $true
+$quizHtml = QuizHtml
+$nQuiz = 0; $serieCounts = @()
+foreach ($se in $script:series) { if ($se.qs.Count) { $nQuiz += $se.qs.Count; $serieCounts += $se.qs.Count } }
+$nThemes = [regex]::Matches($coursHtml, '<section class="theme"').Count
 $evalMd = ReadU $Eval
 $evalHtml = EvalHtml $evalMd $Note
 if (-not $Note -and $evalMd -match 'Note\s*:\s*(\d+(?:[,.]\d+)?)\s*/\s*20') { $Note = $Matches[1] }
@@ -320,7 +505,29 @@ function ReplaceBlock([string]$s, [string]$name, [string]$html) {
 }
 $result = ReplaceBlock $tpl 'CONTENU-COURS' $coursHtml
 $result = ReplaceBlock $result 'CONTENU-EVAL' $evalHtml
+if ($nQuiz -gt 0) {
+  $result = ReplaceBlock $result 'CONTENU-QUIZ' $quizHtml
+  $result = [regex]::Replace($result, '<!-- (?:PAGE-QUIZ|QUIZ-TAB):(?:DEBUT|FIN)[^>]*-->\r?\n?', '')
+} else {
+  # Pas de quiz : ni onglet ni page Quiz
+  $result = ReplaceBlock $result 'QUIZ-TAB' ''
+  $result = ReplaceBlock $result 'PAGE-QUIZ' ''
+}
+$sPl = if ($serieCounts.Count -gt 1) { 's' } else { '' }
+$resume = [string]$nQuiz + ' questions en ' + $serieCounts.Count + ' s' + [char]0xE9 + 'rie' + $sPl
+$result = $result.Replace('{{TITRE_ATTR}}', (EscA $titre)).Replace('{{NOTE_ATTR}}', (EscA $Note)).Replace('{{DATE_ATTR}}', (EscA $Date))
+$result = $result.Replace('{{META_THEMES}}', [string]$nThemes).Replace('{{META_QUIZ}}', [string]$nQuiz).Replace('{{META_REVISION}}', [string]$script:revStats.hit)
+$result = $result.Replace('{{QUIZ_RESUME}}', $resume)
 $result = $result.Replace('{{TITRE}}', (Esc $titre)).Replace('{{DATE}}', $Date).Replace('{{NOTE}}', $Note)
+
+# Bilan quiz / revision
+if ($script:qBad.Count) {
+  Write-Warning ([string]$script:qBad.Count + ' question(s) ignoree(s), format QCM attendu (enonce, - A) ... - D), Reponse : X, Explication : ...) :')
+  foreach ($b in $script:qBad) { Write-Warning ('  ' + $b) }
+}
+foreach ($q in $script:revAll) { if (-not $q.used) { Write-Warning ('Revision : question sans sous-theme correspondant dans le cours : ' + $q.h2 + ' > ' + $q.h3) } }
+$detail = if ($serieCounts.Count) { ' (' + ($serieCounts -join ' + ') + ')' } elseif (-not $hasQuizFile) { ' (fichier quiz absent)' } else { '' }
+Write-Host ('Revision : ' + $script:revStats.hit + ' / ' + $script:revStats.subs + ' sous-themes ; quiz : ' + $nQuiz + ' questions en ' + $serieCounts.Count + ' serie(s)' + $detail)
 
 if (-not $Out) { $Out = 'output\COURS_CORRECTION_IA_' + (Get-Date -Format 'ddMMyyyy_HHmm') + '.html' }
 $dest = P $Out
