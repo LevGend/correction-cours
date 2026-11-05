@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T19:12",
+    "mis_a_jour":  "2026-11-05T19:17",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -283,15 +283,15 @@
                                                                "controle":  "OK"
                                                            },
                                            "quiz":  {
-                                                        "statut":  "en_cours",
                                                         "modele":  "opus",
                                                         "raison_modele":  "professeur : toujours opus (exactitude critique)",
                                                         "tentatives":  1,
                                                         "sorties":  [
                                                                         "work/04_quiz.md"
                                                                     ],
-                                                        "controle":  "",
-                                                        "remarques":  "Ajout a posteriori (C20) sur le cours VMware"
+                                                        "remarques":  "Ajout a posteriori (C20) sur le cours VMware",
+                                                        "statut":  "termine",
+                                                        "controle":  "OK : 36/36 questions de révision appariées, 54 QCM en 3 séries de 18, réponses A=12 B=13 C=15 D=14, 42/42 concepts, aucun {{…}}, onglets / correction / Hub testés dans le navigateur (bureau et mobile)"
                                                     }
                                        },
                             "note":  "15,5",
@@ -490,6 +490,11 @@
                         "date":  "2026-11-05T19:12",
                         "acteur":  "orchestrateur",
                         "action":  "Professeur (mission quiz) lancé sur VMware, opus"
+                    },
+                    {
+                        "date":  "2026-11-05T19:17",
+                        "acteur":  "orchestrateur",
+                        "action":  "VMware republié avec quiz (même fichier output/COURS_CORRECTION_IA_05112026_1723.html) ; Hub output/index.html généré (2 cours)"
                     }
                 ]
 }

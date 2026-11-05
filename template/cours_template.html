@@ -230,7 +230,7 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
   .content{margin-left:0;padding:calc(var(--appbar) + 24px) 20px 60px}
   .tab{padding:0 10px;font-size:12px} .chip-score,.brand small{display:none}
 }
-@media (max-width:700px){ .toc{width:100%;grid-template-columns:42% 58%} .eval-head,.cards-2{grid-template-columns:1fr} section.theme{padding:22px 18px} .tpe{grid-template-columns:1fr;gap:6px} .tpe-label{justify-self:start} }
+@media (max-width:700px){ .appbar{gap:8px;padding:0 10px} .brand{display:none} .hub{width:34px;height:34px;font-size:17px} .tabs{margin-left:auto;overflow-x:auto;scrollbar-width:none} .tab{padding:0 8px;font-size:11px;letter-spacing:.03em;white-space:nowrap} .tab.active::after{left:4px;right:4px} .choice{padding:8px 10px} .toc{width:100%;grid-template-columns:42% 58%} .eval-head,.cards-2{grid-template-columns:1fr} section.theme{padding:22px 18px} .tpe{grid-template-columns:1fr;gap:6px} .tpe-label{justify-self:start} }
 @media print{ .appbar,.toc,.btn-ex,.quiz-actions{display:none!important} .content{margin:0;padding:0} .page{display:block!important} .tpe[hidden]{display:grid} .revq-r[hidden],.quiz-answers[hidden]{display:block} }
 </style>
 </head>
@@ -477,6 +477,7 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
     btn.textContent = open ? 'Masquer les réponses' : 'Afficher les réponses';
   };
   $$('.btn-ans').forEach(b => b.addEventListener('click', () => setAns(b, b.getAttribute('aria-expanded') !== 'true')));
+  $$('.qcm input').forEach(i => i.checked = false);   // pas de réponses restaurées par le navigateur
   $$('.quiz-serie').forEach(serie => {
     const qs = $$('.qcm', serie), out = $('.quiz-score', serie), ans = $('.btn-ans', serie);
     $$('[data-act]', serie).forEach(btn => btn.addEventListener('click', () => {
