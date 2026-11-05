@@ -1,0 +1,10 @@
+# Sources personnelles et fichiers de travail : recopiés depuis Documents à chaque cours
+# (supports de cours protégés, notes OneNote, captures pouvant contenir des mots de passe)
+input/
+work/
+archive/
+
+# Divers
+Thumbs.db
+desktop.ini
+*.tmp

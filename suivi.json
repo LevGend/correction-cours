@@ -1,0 +1,434 @@
+{
+    "projet":  "Correction IA de notes de cours",
+    "version_suivi":  1,
+    "mis_a_jour":  "2026-11-05T17:24",
+    "consignes":  [
+                      {
+                          "id":  "C1",
+                          "date":  "2026-11-04T16:06",
+                          "statut":  "active",
+                          "texte":  "Un agent par tâche. Traducteur : convertit le fichier en .md (le fichier OneNote contient toujours des notes prises à la main, le support de cours peut être joint). Organisateur : classe par thèmes et sous-thèmes, renomme la conversation selon le sujet du cours. Publieur : produit le HTML/CSS/JS inspiré du thème Globals Material, sommaire à 2 panneaux (titres, sous-titres dynamiques), dark mode uniquement. Correcteur : vérifie la véracité et l\u0027exhaustivité, évalue la prise de notes, propose des pistes pour aller plus loin."
+                      },
+                      {
+                          "id":  "C2",
+                          "date":  "2026-11-04T16:06",
+                          "statut":  "active",
+                          "texte":  "Interdits : surcharger les documents, inventer des informations. Code couleur et styles ; chaque ajout de l\u0027IA en orange, sans préciser qu\u0027il s\u0027agit d\u0027une correction."
+                      },
+                      {
+                          "id":  "C3",
+                          "date":  "2026-11-04T16:06",
+                          "statut":  "active",
+                          "texte":  "Workflow : traducteur \u003e correcteur \u003e organisateur \u003e publieur."
+                      },
+                      {
+                          "id":  "C4",
+                          "date":  "2026-11-04T16:06",
+                          "statut":  "active",
+                          "texte":  "Rendu : COURS_CORRECTION_IA_DDMMYYYY_HHMM.html, avec une page secondaire pour l\u0027évaluation et « pour aller plus loin ». Message court du correcteur dans le chat avec une note /20."
+                      },
+                      {
+                          "id":  "C5",
+                          "date":  "2026-11-04T16:30",
+                          "statut":  "active",
+                          "texte":  "Amorcer le projet."
+                      },
+                      {
+                          "id":  "C6",
+                          "date":  "2026-11-04T16:50",
+                          "statut":  "active",
+                          "texte":  "Ajouter un orchestrateur : tout passe par lui, il tient ce fichier de suivi .json et le consulte en cas d\u0027oubli. Toutes les instructions de l\u0027utilisateur lui sont adressées. Obligation de résultat. Choix du modèle selon la complexité de la tâche."
+                      },
+                      {
+                          "id":  "C7",
+                          "date":  "2026-11-05T15:13",
+                          "statut":  "active",
+                          "texte":  "Renommer le correcteur en « Professeur »."
+                      },
+                      {
+                          "id":  "C8",
+                          "date":  "2026-11-05T15:13",
+                          "statut":  "active",
+                          "texte":  "Le professeur définit une information en 3 volets : Théorie, Pratique, Exemple. Ex. : solution de prise en main à distance (théorie) ; RDP (pratique) ; commande pour lancer RDP avec des paramètres ou capture de l interface (exemple)."
+                      },
+                      {
+                          "id":  "C9",
+                          "date":  "2026-11-05T15:13",
+                          "statut":  "active",
+                          "texte":  "Le professeur complète l exemple et unifie les informations : pour chaque concept théorique, un cas d usage pratique / nom de solution et un exemple ou un schéma extrait du cours fourni par l utilisateur."
+                      },
+                      {
+                          "id":  "C10",
+                          "date":  "2026-11-05T15:13",
+                          "statut":  "active",
+                          "texte":  "Le publieur ajoute un bouton « Voir des exemples » lorsque c est pertinent."
+                      },
+                      {
+                          "id":  "C11",
+                          "date":  "2026-11-05T16:52",
+                          "statut":  "active",
+                          "texte":  "Marqueur [?] : l étudiant l écrit quand il n a pas eu le temps de noter ou a raté une information. Le professeur doit le savoir."
+                      },
+                      {
+                          "id":  "C12",
+                          "date":  "2026-11-05T16:52",
+                          "statut":  "remplacee",
+                          "texte":  "Revoir les critères de notation : la structure et la clarté comptent peu (prise de notes à la volée, l IA organise). Priorité à la compréhension et à la prise de notes. L étudiant ne note pas ce qu il connaît déjà. Une information juste absente du cours écrit = bonus."
+                      },
+                      {
+                          "id":  "C13",
+                          "date":  "2026-11-05T16:52",
+                          "statut":  "remplacee",
+                          "texte":  "Code couleur : blanc = dans le cours et noté ; rouge = correction (texte initial barré, correction en rouge) ; or (jaune foncé) = absent du cours, recherche personnelle. Demande d autres idées."
+                      },
+                      {
+                          "id":  "C14",
+                          "date":  "2026-11-05T16:57",
+                          "statut":  "active",
+                          "texte":  "Critères de notation validés, sauf « ancrage pratique » (non noté dans le cours), remplacé par le taux de prise de notes par chapitre. Résultat : Compréhension /10, Taux de prise de notes par chapitre /10, bonus recherche personnelle +3 (plafond 20). Structure et clarté non notées."
+                      },
+                      {
+                          "id":  "C15",
+                          "date":  "2026-11-05T16:57",
+                          "statut":  "active",
+                          "texte":  "Code couleur validé : blanc = cours noté ; or = recherche perso hors cours ; rouge = correction (initial barré + correction rouge) ; orange = dans le cours mais non noté ; violet = complément IA hors cours ; cyan pointillé = [?] comblé. Rouge libéré (encadrés neutres). Légende cliquable pour masquer une couleur + interrupteur couleurs on/off."
+                      },
+                      {
+                          "id":  "C16",
+                          "date":  "2026-11-05T16:57",
+                          "statut":  "active",
+                          "texte":  "Les supports de cours seront fournis."
+                      },
+                      {
+                          "id":  "C17",
+                          "date":  "2026-11-05T17:05",
+                          "statut":  "active",
+                          "texte":  "Nouvelle répartition validée : le professeur est scindé en professeur (correction, couleurs, [?], concepts) et évaluateur (note, taux par chapitre, pistes), qui tourne en parallèle de l organisateur. L orchestrateur lance lui-même md2html.ps1, et l agent publieur n intervient qu en cas de bug. Traducteur sur Haiku sans images."
+                      }
+                  ],
+    "regles_permanentes":  {
+                               "ordre":  [
+                                             "traducteur",
+                                             "professeur",
+                                             "evaluateur + organisateur (en parallèle)",
+                                             "publication (script, publieur si bug)"
+                                         ],
+                               "ajouts_ia":  "Couleurs : blanc (cours noté), or .perso (recherche perso), rouge del + .fix (correction), orange .ai (cours non noté), violet .hors (complément IA hors cours), cyan .gap ([?] comblé)",
+                               "interdits":  [
+                                                 "inventer",
+                                                 "surcharger"
+                                             ],
+                               "theme":  "Material dark (inspiration Globals), dark mode uniquement",
+                               "sommaire":  "2 panneaux : thèmes, puis sous-thèmes dynamiques",
+                               "sortie":  "output/COURS_CORRECTION_IA_DDMMYYYY_HHMM.html + page Évaluation \u0026 plus loin",
+                               "chat_final":  "message court de l évaluateur + note /20",
+                               "modeles_defaut":  {
+                                                      "traducteur":  "haiku (sonnet si images)",
+                                                      "professeur":  "opus",
+                                                      "evaluateur":  "sonnet",
+                                                      "organisateur":  "sonnet",
+                                                      "publieur":  "sonnet (seulement si bug)"
+                                                  },
+                               "concepts":  "Chaque concept : bloc :::concept avec @theorie / @pratique / @exemple ; exemple tiré du cours en priorité ; bouton Voir des exemples si exemple riche",
+                               "notation":  "Compréhension /10 + Taux de prise de notes par chapitre /10 + bonus recherche perso jusqu à +3, plafond 20"
+                           },
+    "traitements":  [
+                        {
+                            "id":  "T1",
+                            "debut":  "2026-11-05T09:00",
+                            "fichiers_entree":  [
+                                                    "input/proxmox.one (copie de C:\\Users\\LeviGENDRON-ConnecsI\\Documents\\export\\proxmox.one)"
+                                                ],
+                            "support_cours":  "aucun",
+                            "preparation":  {
+                                                "methode":  "Export OneNote COM -\u003e work/one_xml (22 pages XML) -\u003e scripts/one_flatten.ps1 -\u003e work/00_source.txt (13 Ko) + work/img/ (2 images)",
+                                                "remarque":  "Section ouverte dans OneNote depuis une copie temporaire (%TEMP%\\one_proxmox), à fermer manuellement par l utilisateur si souhaité."
+                                            },
+                            "etapes":  {
+                                           "traducteur":  {
+                                                              "modele":  "sonnet",
+                                                              "raison_modele":  "Source texte compacte mais 2 images (schéma RAID, capture Wi-Fi) à interpréter : règle images -\u003e sonnet",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "statut":  "termine",
+                                                              "controle":  "OK - 22/22 pages, images retranscrites",
+                                                              "tentatives":  "1",
+                                                              "remarques":  "Mot de passe de TP présent dans les notes : à masquer dans les sorties publiées."
+                                                          },
+                                           "correcteur":  {
+                                                              "modele":  "opus",
+                                                              "raison_modele":  "Toujours opus",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "statut":  "termine",
+                                                              "controle":  "OK",
+                                                              "tentatives":  "1"
+                                                          },
+                                           "organisateur":  {
+                                                                "modele":  "sonnet",
+                                                                "raison_modele":  "Défaut",
+                                                                "sorties":  [
+
+                                                                            ],
+                                                                "remarques":  "",
+                                                                "statut":  "termine",
+                                                                "controle":  "OK",
+                                                                "tentatives":  "1"
+                                                            },
+                                           "publieur":  {
+                                                            "modele":  "sonnet",
+                                                            "raison_modele":  "Défaut",
+                                                            "sorties":  [
+
+                                                                        ],
+                                                            "remarques":  "",
+                                                            "statut":  "termine",
+                                                            "controle":  "OK - vérifié dans le navigateur : 9 thèmes / 37 sous-thèmes dynamiques, 89 ai, 2 images, onglet Évaluation (14,5, 5 liens)",
+                                                            "tentatives":  "1"
+                                                        }
+                                       },
+                            "note":  "14,5",
+                            "titre":  "Virtualisation – Proxmox VE",
+                            "fichier_final":  "output/COURS_CORRECTION_IA_05112026_0908.html",
+                            "statut":  "termine"
+                        },
+                        {
+                            "id":  "T2",
+                            "debut":  "2026-11-05T17:09",
+                            "fichiers_entree":  [
+                                                    "input/VmWare.one (copie de Documents\\export\\VmWare.one)"
+                                                ],
+                            "support_cours":  "8 PDF dans input/support (présentation + modules 1 à 7), extraits en texte dans work/support/ (78 Ko)",
+                            "preparation":  {
+                                                "methode":  "T1 archivé dans archive/T1_proxmox. OneNote COM -\u003e 8 pages XML -\u003e work/00_source.txt (21 Ko) + 11 images ; pdftotext -\u003e work/support/*.txt",
+                                                "remarque":  "Section ouverte dans OneNote depuis %TEMP%\\one_vmware. L étudiant utilise aussi [???] comme marqueur."
+                                            },
+                            "etapes":  {
+                                           "traducteur":  {
+                                                              "modele":  "sonnet",
+                                                              "raison_modele":  "11 images (règle images -\u003e sonnet) + support de 8 modules à condenser",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "statut":  "termine",
+                                                              "controle":  "OK",
+                                                              "tentatives":  "1"
+                                                          },
+                                           "professeur":  {
+                                                              "modele":  "opus",
+                                                              "raison_modele":  "Toujours opus",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "tentatives":  "2",
+                                                              "statut":  "termine",
+                                                              "controle":  "OK après relance (8 @pratique manquants ajoutés)"
+                                                          },
+                                           "evaluateur":  {
+                                                              "modele":  "sonnet",
+                                                              "raison_modele":  "Défaut (support ~78 Ko, moins de 50 pages utiles)",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "statut":  "termine",
+                                                              "controle":  "OK",
+                                                              "tentatives":  "1"
+                                                          },
+                                           "organisateur":  {
+                                                                "modele":  "sonnet",
+                                                                "raison_modele":  "Défaut",
+                                                                "sorties":  [
+
+                                                                            ],
+                                                                "remarques":  "",
+                                                                "statut":  "termine",
+                                                                "controle":  "OK",
+                                                                "tentatives":  "1"
+                                                            },
+                                           "publication":  {
+                                                               "modele":  "script",
+                                                               "raison_modele":  "md2html.ps1, publieur seulement si bug",
+                                                               "tentatives":  0,
+                                                               "sorties":  [
+
+                                                                           ],
+                                                               "remarques":  "",
+                                                               "statut":  "termine",
+                                                               "controle":  "OK"
+                                                           }
+                                       },
+                            "note":  "15,5",
+                            "titre":  "VMware vSphere – ESXi et vCenter",
+                            "fichier_final":  "output/COURS_CORRECTION_IA_05112026_1723.html",
+                            "statut":  "termine"
+                        }
+                    ],
+    "journal":  [
+                    {
+                        "date":  "2026-11-04T16:10",
+                        "acteur":  "orchestrateur",
+                        "action":  "Aucun fichier de cours trouvé, demande envoyée à l\u0027utilisateur."
+                    },
+                    {
+                        "date":  "2026-11-04T16:40",
+                        "acteur":  "orchestrateur",
+                        "action":  "Projet amorcé : CLAUDE.md, 4 agents, gabarit HTML vérifié dans le navigateur."
+                    },
+                    {
+                        "date":  "2026-11-04T16:50",
+                        "acteur":  "orchestrateur",
+                        "action":  "Rôle d\u0027orchestrateur ajouté (CLAUDE.md), suivi.json créé, modèles par défaut fixés."
+                    },
+                    {
+                        "date":  "2026-11-04T16:57",
+                        "acteur":  "orchestrateur",
+                        "action":  "Utilisateur annonce un fichier joint, mais rien n est recu (input/ vide). Telechargement .crdownload en cours dans Telechargements. Demande de nouvel envoi."
+                    },
+                    {
+                        "date":  "2026-11-05T09:00",
+                        "acteur":  "orchestrateur",
+                        "action":  "Fichier proxmox.one reçu. Traitement T1 ouvert. Export OneNote réussi (22 pages), source aplatie dans work/00_source.txt."
+                    },
+                    {
+                        "date":  "2026-11-05T09:00",
+                        "acteur":  "orchestrateur",
+                        "action":  "Traducteur lancé (sonnet)"
+                    },
+                    {
+                        "date":  "2026-11-05T09:02",
+                        "acteur":  "orchestrateur",
+                        "action":  "Traducteur terminé : 01_notes.md (22 pages, 2 images). Contrôle OK : 22 titres, aucune page manquante."
+                    },
+                    {
+                        "date":  "2026-11-05T09:02",
+                        "acteur":  "orchestrateur",
+                        "action":  "Correcteur lancé (opus)"
+                    },
+                    {
+                        "date":  "2026-11-05T09:06",
+                        "acteur":  "orchestrateur",
+                        "action":  "Correcteur terminé : note 14,5/20. Contrôle OK : 22 pages, 80 balises ai, mot de passe masqué, évaluation complète avec Pour aller plus loin."
+                    },
+                    {
+                        "date":  "2026-11-05T09:06",
+                        "acteur":  "orchestrateur",
+                        "action":  "Organisateur lancé (sonnet)"
+                    },
+                    {
+                        "date":  "2026-11-05T09:08",
+                        "acteur":  "orchestrateur",
+                        "action":  "Organisateur terminé. Contrôle OK : 9 H2, 37 H3, tous les H2 ont un H3, 89/89 balises ai, mot de passe toujours masqué."
+                    },
+                    {
+                        "date":  "2026-11-05T09:08",
+                        "acteur":  "orchestrateur",
+                        "action":  "Publieur lancé (sonnet)"
+                    },
+                    {
+                        "date":  "2026-11-05T09:12",
+                        "acteur":  "orchestrateur",
+                        "action":  "Publieur terminé : output/COURS_CORRECTION_IA_05112026_0908.html (775 Ko, autonome)."
+                    },
+                    {
+                        "date":  "2026-11-05T09:12",
+                        "acteur":  "orchestrateur",
+                        "action":  "Traitement T1 terminé. Conversation renommée « Virtualisation – Proxmox VE ». Note communiquée : 14,5/20."
+                    },
+                    {
+                        "date":  "2026-11-05T15:13",
+                        "acteur":  "orchestrateur",
+                        "action":  "Consignes C7 à C10 reçues (professeur, concepts Théorie/Pratique/Exemple, bouton Voir des exemples). Note : dans T1, l étape « correcteur » correspond au professeur."
+                    },
+                    {
+                        "date":  "2026-11-05T15:15",
+                        "acteur":  "orchestrateur",
+                        "action":  "C7-C10 appliquées : agent professeur (remplace correcteur), format :::concept Théorie/Pratique/Exemple, organisateur et publieur mis à jour, md2html.ps1 et gabarit : cartes concept + boutons Voir des exemples / Voir tous les exemples. Testé dans le navigateur. Le cours T1 (Proxmox) a été produit avant ces règles."
+                    },
+                    {
+                        "date":  "2026-11-05T16:52",
+                        "acteur":  "orchestrateur",
+                        "action":  "C11 appliquée (marqueur [?]). C12 et C13 : proposition envoyée à l utilisateur, en attente de validation."
+                    },
+                    {
+                        "date":  "2026-11-05T16:57",
+                        "acteur":  "orchestrateur",
+                        "action":  "C14-C16 reçues : application des critères et du code couleur."
+                    },
+                    {
+                        "date":  "2026-11-05T17:00",
+                        "acteur":  "orchestrateur",
+                        "action":  "C14-C15 appliquées : barème (Compréhension /10, Taux par chapitre /10, bonus +3), code couleur à 6 catégories (perso, del+fix, ai, hors, gap), encadrés neutres, légende cliquable, interrupteur couleurs (mémorisé), taux par chapitre avec barres dans l\u0027évaluation. Testé dans le navigateur."
+                    },
+                    {
+                        "date":  "2026-11-05T17:05",
+                        "acteur":  "orchestrateur",
+                        "action":  "C17 reçue : mise en place de l évaluateur et de la publication par script."
+                    },
+                    {
+                        "date":  "2026-11-05T17:06",
+                        "acteur":  "orchestrateur",
+                        "action":  "C17 appliquée : agent evaluateur créé (en parallèle de l\u0027organisateur), professeur allégé (plus de notation), publieur réduit au dépannage, publication par md2html.ps1 lancée par l\u0027orchestrateur. CLAUDE.md mis à jour (workflow, contrôles, modèles)."
+                    },
+                    {
+                        "date":  "2026-11-05T17:09",
+                        "acteur":  "orchestrateur",
+                        "action":  "Cours VMware reçu (VmWare.one + 8 PDF). T2 ouvert, sources préparées. Traducteur lancé (sonnet)."
+                    },
+                    {
+                        "date":  "2026-11-05T17:12",
+                        "acteur":  "orchestrateur",
+                        "action":  "Traducteur terminé. Contrôle OK : 01_notes.md 8/8 pages, 11/11 images, 2 [?] ; 01_support.md 8 modules (33 % du brut, termes clés vérifiés : vMotion, VMFS, NFS, DRS, snapshot, OVF, iSCSI présents)."
+                    },
+                    {
+                        "date":  "2026-11-05T17:12",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur lancé (opus)"
+                    },
+                    {
+                        "date":  "2026-11-05T17:19",
+                        "acteur":  "orchestrateur",
+                        "action":  "Contrôle professeur : ÉCHEC partiel, 8 concepts sur 42 sans @pratique. Renvoyé au professeur (tentative 2, même modèle opus). Remarques : img_1.png montre des mots de passe en clair, donc elle n\u0027est plus référencée ; module 7 du support absent des notes."
+                    },
+                    {
+                        "date":  "2026-11-05T17:21",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur terminé (tentative 2). Contrôle OK : 8 pages, 42/42 concepts complets, balises équilibrées, 0 [?] restant. Couleurs : perso 33, fix 11, ai 92, hors 12, gap 2."
+                    },
+                    {
+                        "date":  "2026-11-05T17:21",
+                        "acteur":  "orchestrateur",
+                        "action":  "Évaluateur (sonnet) et organisateur (sonnet) lancés en parallèle. Décision : le module 7 (absent des notes) est affiché dans le tableau mais exclu du calcul du taux, en le signalant."
+                    },
+                    {
+                        "date":  "2026-11-05T17:22",
+                        "acteur":  "orchestrateur",
+                        "action":  "Évaluateur terminé : 15,5/20 (7,5 + 6 + 2). Contrôle OK : format respecté, calcul vérifié (moyenne des 7 chapitres 57,9 % -\u003e 6/10), module 7 exclu et signalé, URL vérifiées."
+                    },
+                    {
+                        "date":  "2026-11-05T17:23",
+                        "acteur":  "orchestrateur",
+                        "action":  "Organisateur terminé. Contrôle OK (orchestrateur) : couleurs 33/11/92/12/2 et del 11 identiques, 42 concepts, 10 images, seules 3 lignes devenues des titres H3, chaque H2 a un H3, titre de 32 caractères."
+                    },
+                    {
+                        "date":  "2026-11-05T17:23",
+                        "acteur":  "orchestrateur",
+                        "action":  "Publication par script : output/COURS_CORRECTION_IA_05112026_1723.html"
+                    },
+                    {
+                        "date":  "2026-11-05T17:24",
+                        "acteur":  "orchestrateur",
+                        "action":  "Publication contrôlée dans le navigateur : 8 thèmes / 36 sous-thèmes, 42 concepts, 13 boutons d\u0027exemples + bouton global OK, légende 6 couleurs et interrupteur OK, 10/10 images, onglet Évaluation (15,5 ; 7 barres ; 4 liens). Mots de passe masqués."
+                    },
+                    {
+                        "date":  "2026-11-05T17:24",
+                        "acteur":  "orchestrateur",
+                        "action":  "Traitement T2 terminé. Conversation renommée « VMware vSphere – ESXi et vCenter ». Note communiquée : 15,5/20."
+                    }
+                ]
+}

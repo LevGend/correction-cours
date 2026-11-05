@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>{{TITRE}} – Correction IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+<style>
+/* ===== Palette (Material dark, inspiration Globals) ===== */
+:root{
+  --bg:#121212; --surface:#1d1d1f; --surface-2:#26262a; --surface-3:#303036;
+  --line:#3a3a42; --text:#e8e8ec; --text-2:#a9a9b3; --text-3:#7a7a85;
+  --primary:#448aff; --primary-soft:rgba(68,138,255,.14);
+  --accent:#1de9b6;
+  --ai:#ff8a3d; --ai-soft:rgba(255,138,61,.10);
+  --gold:#e8c547; --red:#ff5252; --hors:#b388ff; --hors-soft:rgba(179,136,255,.10); --gap:#4dd0e1;
+  --def:#40c4ff; --imp:#b388ff; --ex:#69f0ae; --warn:#ff5252;
+  --radius:10px; --appbar:64px;
+  --shadow-1:0 1px 3px rgba(0,0,0,.5),0 1px 2px rgba(0,0,0,.4);
+  --shadow-2:0 4px 12px rgba(0,0,0,.55);
+  --font:'Roboto',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'Roboto Mono',Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--appbar) + 16px)}
+body{background:var(--bg);color:var(--text);font:400 16px/1.65 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
+
+/* ===== App bar ===== */
+.appbar{position:fixed;inset:0 0 auto 0;height:var(--appbar);z-index:20;display:flex;align-items:center;gap:20px;
+  padding:0 24px;background:linear-gradient(90deg,#1a237e 0%,#283593 45%,#1d1d1f 100%);box-shadow:var(--shadow-2)}
+.appbar .menu{display:none;background:none;border:0;color:#fff;font-size:24px;cursor:pointer}
+.brand{display:flex;flex-direction:column;line-height:1.2;min-width:0;flex:1}
+.brand b{font-weight:500;font-size:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand small{color:rgba(255,255,255,.65);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.tabs{margin-left:auto;display:flex;height:100%;flex:none}
+.tab{background:none;border:0;color:rgba(255,255,255,.7);font:500 14px var(--font);letter-spacing:.06em;text-transform:uppercase;
+  padding:0 20px;cursor:pointer;position:relative;transition:color .2s}
+.tab:hover{color:#fff}
+.tab.active{color:#fff}
+.tab.active::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--accent)}
+.chip-score{background:rgba(255,255,255,.12);border-radius:16px;padding:4px 12px;font-size:13px;font-weight:500;color:#fff;white-space:nowrap}
+
+/* ===== Sommaire à 2 panneaux ===== */
+.toc{position:fixed;top:var(--appbar);bottom:0;left:0;width:520px;display:grid;grid-template-columns:240px 280px;z-index:10}
+.panel{overflow-y:auto;padding:20px 0;scrollbar-width:thin;scrollbar-color:var(--surface-3) transparent}
+.panel-titles{background:var(--surface);border-right:1px solid var(--line)}
+.panel-subs{background:var(--surface-2);border-right:1px solid var(--line)}
+.panel h4{font:500 11px var(--font);letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);padding:0 20px 12px}
+.panel ul{list-style:none}
+.panel a{display:flex;align-items:center;gap:12px;padding:10px 20px;color:var(--text-2);font-size:14px;line-height:1.35;
+  border-left:3px solid transparent;transition:background .15s,color .15s}
+.panel a:hover{background:rgba(255,255,255,.04);color:var(--text);text-decoration:none}
+.panel-titles .num{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:500;
+  background:var(--surface-3);color:var(--text-2);transition:.2s}
+.panel-titles a.active{color:#fff;background:var(--primary-soft);border-left-color:var(--primary)}
+.panel-titles a.active .num{background:var(--primary);color:#fff}
+.panel-subs .current-theme{padding:0 20px 16px;font-weight:500;font-size:16px;color:var(--text)}
+.panel-subs a.active{color:var(--accent);border-left-color:var(--accent);background:rgba(29,233,182,.07)}
+.panel-subs ul{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+
+/* ===== Contenu ===== */
+.content{margin-left:520px;padding:calc(var(--appbar) + 32px) 48px 80px;max-width:1440px}
+.page{display:none} .page.active{display:block}
+.hero{margin-bottom:32px}
+.hero h1{font-weight:300;font-size:36px;line-height:1.2}
+.hero p{color:var(--text-2);margin-top:6px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.legend .chip{font:400 12px var(--font);color:var(--text);padding:4px 11px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line);display:inline-flex;align-items:center;gap:6px;cursor:pointer;transition:opacity .15s,background .15s}
+.legend .chip:hover{background:var(--surface-3)}
+.legend .chip.static{cursor:default}
+.legend .chip[aria-pressed="false"]{opacity:.45;text-decoration:line-through}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:12px;cursor:pointer;margin-left:6px;user-select:none}
+.switch input{position:absolute;opacity:0;pointer-events:none}
+.switch .track{width:32px;height:18px;border-radius:9px;background:var(--surface-3);position:relative;transition:background .2s}
+.switch .track::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--text-2);transition:transform .2s,background .2s}
+.switch input:checked+.track{background:var(--primary)}
+.switch input:checked+.track::after{transform:translateX(14px);background:#fff}
+.switch input:focus-visible+.track{outline:2px solid var(--primary);outline-offset:2px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+section.theme{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-1);padding:28px 32px;margin-bottom:28px;border-top:3px solid var(--primary)}
+section.theme>h2{font-weight:400;font-size:26px;margin-bottom:8px;display:flex;align-items:center;gap:14px}
+section.theme>h2 .num{font-size:14px;font-weight:500;width:34px;height:34px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;flex:none}
+section.sub{padding-top:18px;margin-top:18px;border-top:1px solid var(--line)}
+section.theme>h2+section.sub,section.theme>h2+*+section.sub{border-top:0;margin-top:4px}
+section.sub>h3{font-weight:500;font-size:18px;color:var(--accent);margin-bottom:10px}
+h4{font-weight:500;font-size:16px;margin:14px 0 6px}
+p,ul,ol,table,pre,.callout{margin-bottom:12px}
+ul,ol{padding-left:24px} li{margin:3px 0} li::marker{color:var(--text-3)}
+strong{font-weight:500;color:#fff}
+code{font-family:var(--mono);font-size:.88em;background:var(--surface-3);padding:2px 6px;border-radius:4px}
+pre{background:#0b0b0d;border:1px solid var(--line);border-radius:8px;padding:14px 16px;overflow-x:auto;position:relative}
+pre code{background:none;padding:0;font-size:13.5px;line-height:1.6}
+pre[data-lang]::before{content:attr(data-lang);position:absolute;top:6px;right:10px;font:500 10px var(--font);letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)}
+table{width:100%;border-collapse:collapse;font-size:14.5px;background:var(--surface-2);border-radius:8px;overflow:hidden}
+th{background:var(--surface-3);text-align:left;font-weight:500;padding:10px 14px}
+td{padding:9px 14px;border-top:1px solid var(--line);vertical-align:top}
+
+/* Callouts : neutres (les couleurs sont réservées à la provenance du texte) */
+.callout{border-left:4px solid var(--text-3);border-radius:0 8px 8px 0;padding:12px 16px 12px 44px;position:relative;background:var(--surface-2)}
+.callout::before{position:absolute;left:14px;top:11px;font-size:15px;line-height:1.4;color:var(--text-2)}
+.callout>:last-child{margin-bottom:0}
+.callout.def::before{content:"📘";filter:grayscale(1)}
+.callout.important{border-left-width:6px} .callout.important::before{content:"★"}
+.callout.exemple::before{content:"▶";font-size:12px;top:13px}
+.callout.attention{border-left-style:double;border-left-width:6px} .callout.attention::before{content:"⚠"}
+
+/* Concepts : Théorie / Pratique / Exemple */
+.concept{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);margin:4px 0 16px;overflow:hidden}
+.concept-title{font-weight:500;font-size:16px;padding:12px 18px;background:var(--surface-3);display:flex;align-items:center;gap:10px}
+.concept-title::before{content:"";width:10px;height:10px;border-radius:2px;transform:rotate(45deg);background:var(--primary);flex:none}
+.tpe{display:grid;grid-template-columns:96px 1fr;gap:14px;padding:12px 18px;border-top:1px solid var(--line)}
+.tpe[hidden]{display:none}
+.tpe-label{font:500 11px/1.9 var(--font);letter-spacing:.08em;text-transform:uppercase;align-self:start;text-align:center;border-radius:12px;padding:0 8px}
+.tpe-theorie .tpe-label{background:rgba(64,196,255,.14);color:var(--def)}
+.tpe-pratique .tpe-label{background:rgba(29,233,182,.12);color:var(--accent)}
+.tpe-exemple .tpe-label{background:rgba(105,240,174,.12);color:var(--ex)}
+.tpe-body{min-width:0}
+.tpe-body>:last-child{margin-bottom:0}
+.tpe-exemple:not([hidden]){animation:fade .25s ease}
+.btn-ex{display:flex;align-items:center;gap:8px;margin:0 18px 12px auto;padding:6px 14px;border-radius:18px;cursor:pointer;
+  background:transparent;border:1px solid var(--ex);color:var(--ex);font:500 12px var(--font);letter-spacing:.06em;text-transform:uppercase;transition:background .15s}
+.btn-ex::before{content:"▸";transition:transform .2s}
+.btn-ex[aria-expanded="true"]::before{transform:rotate(90deg)}
+.btn-ex:hover{background:rgba(105,240,174,.08)}
+.concept>.btn-ex{margin-top:12px}
+.concept>.btn-ex+.tpe-exemple{border-top:1px dashed var(--line)}
+.tools{display:flex;justify-content:flex-end;margin-bottom:16px}
+.tools .btn-ex{margin:0}
+
+/* Code couleur = provenance du texte (sans mention écrite) */
+.perso{color:var(--gold)}
+del{color:var(--text-2);text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:2px}
+.fix{color:var(--red)}
+.ai{color:var(--ai)}
+.hors{color:var(--hors)}
+.gap{color:var(--gap);text-decoration:underline dotted;text-underline-offset:3px}
+span.ai,span.hors{border-radius:3px;padding:0 3px}
+span.ai{background:var(--ai-soft)} span.hors{background:var(--hors-soft)}
+div.ai,div.hors{border-left:3px solid;border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:12px}
+div.ai{background:var(--ai-soft);border-color:var(--ai)} div.hors{background:var(--hors-soft);border-color:var(--hors)}
+div.ai>:last-child,div.hors>:last-child{margin-bottom:0}
+.perso strong,.fix strong,.ai strong,.hors strong,.gap strong{color:inherit}
+.perso code,.fix code,.ai code,.hors code,.gap code{color:inherit}
+/* Légende : masquer une catégorie */
+body.hide-perso .perso,body.hide-ai .ai,body.hide-hors .hors,body.hide-gap .gap,body.hide-fix .fix{display:none}
+body.hide-fix del{text-decoration:none;color:inherit}
+/* Interrupteur : couleurs désactivées = version propre */
+body.no-colors :is(.perso,.fix,.ai,.hors,.gap){color:inherit;background:none;text-decoration:none;padding:0}
+body.no-colors :is(div.ai,div.hors){border-left:0;padding:0}
+body.no-colors del{display:none}
+body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
+
+/* ===== Page Évaluation ===== */
+#page-eval{max-width:1000px}
+.eval-head{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-bottom:28px}
+.score{background:linear-gradient(135deg,#283593,#1a237e);border-radius:var(--radius);box-shadow:var(--shadow-2);display:grid;place-items:center;padding:24px;text-align:center}
+.score b{font-size:56px;font-weight:300;line-height:1;color:#fff}
+.score small{display:block;color:rgba(255,255,255,.7);margin-top:6px;letter-spacing:.08em;text-transform:uppercase;font-size:11px}
+.card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-1);padding:24px 28px;margin-bottom:24px}
+.card>h2{font-weight:400;font-size:21px;margin-bottom:14px}
+.cards-2{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.card.good{border-top:3px solid var(--ex)} .card.bad{border-top:3px solid var(--text-3)}
+#plus-loin{border-top:3px solid var(--accent)}
+#plus-loin li{margin:8px 0}
+.bar{height:6px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin-top:4px;min-width:80px}
+.bar i{display:block;height:100%;background:var(--primary);border-radius:3px}
+
+/* ===== Responsive ===== */
+@media (max-width:1100px){
+  .appbar .menu{display:block}
+  .toc{transform:translateX(-100%);transition:transform .25s;box-shadow:var(--shadow-2)}
+  body.toc-open .toc{transform:none}
+  .content{margin-left:0;padding:calc(var(--appbar) + 24px) 20px 60px}
+  .tab{padding:0 10px;font-size:12px} .chip-score,.brand small{display:none}
+}
+@media (max-width:700px){ .toc{width:100%;grid-template-columns:42% 58%} .eval-head,.cards-2{grid-template-columns:1fr} section.theme{padding:22px 18px} .tpe{grid-template-columns:1fr;gap:6px} .tpe-label{justify-self:start} }
+@media print{ .appbar,.toc,.btn-ex{display:none!important} .content{margin:0;padding:0} .page{display:block!important} .tpe[hidden]{display:grid} }
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <button class="menu" aria-label="Sommaire" onclick="document.body.classList.toggle('toc-open')">☰</button>
+  <div class="brand"><b>{{TITRE}}</b><small>Notes corrigées · {{DATE}}</small></div>
+  <nav class="tabs">
+    <button class="tab active" data-page="page-cours">Cours</button>
+    <button class="tab" data-page="page-eval">Évaluation &amp; plus loin</button>
+  </nav>
+  <span class="chip-score">{{NOTE}}/20</span>
+</header>
+
+<aside class="toc" id="toc">
+  <div class="panel panel-titles"><h4>Thèmes</h4><ul id="toc-titles"></ul></div>
+  <div class="panel panel-subs"><h4>Sous-thèmes</h4><div class="current-theme" id="toc-current"></div><ul id="toc-subs"></ul></div>
+</aside>
+
+<div class="content">
+
+<!-- ================= PAGE 1 : COURS ================= -->
+<main class="page active" id="page-cours">
+  <div class="hero">
+    <h1>{{TITRE}}</h1>
+    <p>Notes de cours organisées et vérifiées</p>
+    <div class="legend" id="legend">
+      <span class="chip static" title="Ce que tu as noté et qui est dans le cours"><i style="background:var(--text)"></i>Noté</span>
+      <button type="button" class="chip" data-cat="perso" aria-pressed="true" title="Masquer / afficher"><i style="background:var(--gold)"></i>Recherche perso</button>
+      <button type="button" class="chip" data-cat="fix" aria-pressed="true" title="Masquer / afficher"><i style="background:var(--red)"></i>Correction</button>
+      <button type="button" class="chip" data-cat="ai" aria-pressed="true" title="Masquer / afficher"><i style="background:var(--ai)"></i>Oubli du cours</button>
+      <button type="button" class="chip" data-cat="hors" aria-pressed="true" title="Masquer / afficher"><i style="background:var(--hors)"></i>Complément</button>
+      <button type="button" class="chip" data-cat="gap" aria-pressed="true" title="Masquer / afficher"><i style="background:var(--gap)"></i>[?] comblé</button>
+      <label class="switch" title="Activer / désactiver toutes les couleurs"><input type="checkbox" id="colors-on" checked><span class="track"></span>Couleurs</label>
+    </div>
+  </div>
+  <div class="tools"><button type="button" class="btn-ex" id="ex-all" aria-expanded="false">Voir tous les exemples</button></div>
+
+  <!-- CONTENU-COURS:DEBUT (le publieur remplace tout ce bloc) -->
+  <section class="theme" id="t-1"><h2>Thème de démonstration</h2>
+    <section class="sub" id="t-1-1"><h3>Premier sous-thème</h3>
+      <p>Texte des notes de l'étudiant, avec un <span class="ai">complément orange</span> intégré dans la phrase.</p>
+      <div class="callout def"><p><strong>Définition :</strong> exemple de bloc de définition.</p></div>
+    </section>
+    <section class="sub" id="t-1-2"><h3>Second sous-thème</h3>
+      <pre data-lang="bash"><code>ip a show</code></pre>
+      <div class="ai"><p>Bloc entier ajouté, affiché en orange.</p></div>
+    </section>
+  </section>
+  <section class="theme" id="t-2"><h2>Deuxième thème</h2>
+    <section class="sub" id="t-2-1"><h3>Sous-thème A</h3><div class="callout attention"><p>Piège fréquent.</p></div></section>
+    <section class="sub" id="t-2-2"><h3>Sous-thème B</h3><div class="callout exemple"><p>Un exemple.</p></div></section>
+    <section class="sub" id="t-2-3"><h3>Sous-thème C</h3><div class="callout important"><p>À retenir.</p></div></section>
+  </section>
+  <!-- CONTENU-COURS:FIN -->
+</main>
+
+<!-- ================= PAGE 2 : ÉVALUATION ================= -->
+<main class="page" id="page-eval">
+  <!-- CONTENU-EVAL:DEBUT (le publieur remplace tout ce bloc) -->
+  <section class="theme" id="e-1"><h2>Évaluation</h2>
+    <section class="sub" id="e-1-1"><h3>Note globale</h3>
+      <div class="eval-head">
+        <div class="score"><div><b>{{NOTE}}</b><small>sur 20</small></div></div>
+        <div><p>Message court du professeur.</p></div>
+      </div>
+    </section>
+    <section class="sub" id="e-1-2"><h3>Grille</h3>
+      <table><tr><th>Critère</th><th>Note</th><th>Commentaire</th></tr>
+        <tr><td>Exactitude</td><td>–/6</td><td>…</td></tr>
+        <tr><td>Exhaustivité</td><td>–/6</td><td>…</td></tr>
+        <tr><td>Structure et clarté</td><td>–/4</td><td>…</td></tr>
+        <tr><td>Exemples et compréhension</td><td>–/4</td><td>…</td></tr>
+      </table>
+    </section>
+    <section class="sub" id="e-1-3"><h3>Points forts et à améliorer</h3>
+      <div class="cards-2"><div class="card good"><h2>Points forts</h2><ul><li>…</li></ul></div>
+      <div class="card bad"><h2>À améliorer</h2><ul><li>…</li></ul></div></div>
+    </section>
+    <section class="sub" id="e-1-4"><h3>Erreurs relevées</h3><ul><li>…</li></ul></section>
+  </section>
+  <section class="theme" id="plus-loin"><h2>Pour aller plus loin</h2>
+    <section class="sub" id="e-2-1"><h3>Pistes</h3><ul><li>…</li></ul></section>
+  </section>
+  <!-- CONTENU-EVAL:FIN -->
+</main>
+
+</div>
+
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const titlesUl = $('#toc-titles'), subsUl = $('#toc-subs'), current = $('#toc-current');
+  let page = $('.page.active'), themes = [], activeTheme = null, lock = false;
+
+  function buildTitles() {
+    themes = $$(':scope > section.theme', page);
+    titlesUl.innerHTML = '';
+    themes.forEach((t, i) => {
+      if (!t.id) t.id = page.id + '-t' + (i + 1);
+      const h2 = $(':scope > h2', t);
+      const label = h2.textContent.trim();
+      if (!$('.num', h2)) h2.insertAdjacentHTML('afterbegin', `<span class="num">${i + 1}</span>`);
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#${t.id}" data-theme="${t.id}"><span class="num">${i + 1}</span><span>${label}</span></a>`;
+      li.firstChild.addEventListener('mouseenter', () => showSubs(t));
+      li.firstChild.addEventListener('click', e => { e.preventDefault(); goto(t); setTheme(t); });
+      titlesUl.appendChild(li);
+    });
+    titlesUl.parentElement.addEventListener('mouseleave', () => activeTheme && showSubs(activeTheme));
+    if (themes[0]) setTheme(themes[0]);
+  }
+
+  function showSubs(t) {
+    if (subsUl.dataset.theme === t.id) return;
+    subsUl.dataset.theme = t.id;
+    current.textContent = $(':scope > h2', t).textContent.replace(/^\d+/, '').trim();
+    subsUl.innerHTML = '';
+    $$(':scope > section.sub', t).forEach((s, j) => {
+      if (!s.id) s.id = t.id + '-' + (j + 1);
+      const li = document.createElement('li');
+      li.innerHTML = `<a href="#${s.id}" data-sub="${s.id}">${$('h3', s).textContent.trim()}</a>`;
+      li.firstChild.addEventListener('click', e => { e.preventDefault(); goto(s); setTheme(t); markSub(s.id); });
+      subsUl.appendChild(li);
+    });
+    subsUl.style.animation = 'none'; subsUl.offsetHeight; subsUl.style.animation = '';
+  }
+
+  function setTheme(t) {
+    activeTheme = t;
+    $$('a', titlesUl).forEach(a => a.classList.toggle('active', a.dataset.theme === t.id));
+    showSubs(t);
+  }
+  const markSub = id => $$('a', subsUl).forEach(a => a.classList.toggle('active', a.dataset.sub === id));
+
+  function goto(el) {
+    lock = true; el.scrollIntoView({ behavior: 'smooth' });
+    history.replaceState(null, '', '#' + el.id);
+    document.body.classList.remove('toc-open');
+    setTimeout(() => lock = false, 700);
+  }
+
+  // Suivi au défilement : thème + sous-thème actifs
+  function onScroll() {
+    if (lock || !themes.length) return;
+    const y = innerHeight * 0.3;
+    let t = themes[0];
+    for (const th of themes) if (th.getBoundingClientRect().top <= y) t = th;
+    if (t !== activeTheme) setTheme(t);
+    let s = null;
+    for (const sub of $$(':scope > section.sub', t)) if (sub.getBoundingClientRect().top <= y) s = sub;
+    markSub(s ? s.id : '');
+  }
+  addEventListener('scroll', () => requestAnimationFrame(onScroll), { passive: true });
+
+  // Onglets Cours / Évaluation
+  function showPage(id) {
+    $$('.page').forEach(p => p.classList.toggle('active', p.id === id));
+    $$('.tab').forEach(b => b.classList.toggle('active', b.dataset.page === id));
+    page = $('#' + id); subsUl.dataset.theme = ''; scrollTo(0, 0); buildTitles();
+  }
+  $$('.tab').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
+
+  // Légende cliquable (masquer une couleur) + interrupteur des couleurs, mémorisés localement
+  const KEY = 'cours-couleurs';
+  let pref = { off: false, hide: [] };
+  try { pref = Object.assign(pref, JSON.parse(localStorage.getItem(KEY)) || {}); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(pref)); } catch (e) {} };
+  const chips = $$('#legend .chip[data-cat]'), sw = $('#colors-on');
+  const applyColors = () => {
+    document.body.classList.toggle('no-colors', pref.off);
+    if (sw) sw.checked = !pref.off;
+    chips.forEach(c => {
+      const hidden = pref.hide.includes(c.dataset.cat);
+      document.body.classList.toggle('hide-' + c.dataset.cat, hidden);
+      c.setAttribute('aria-pressed', !hidden);
+    });
+  };
+  chips.forEach(c => {
+    if (!document.querySelector('.' + c.dataset.cat + (c.dataset.cat === 'fix' ? ',del' : ''))) c.hidden = true;  // catégorie absente du cours
+    c.addEventListener('click', () => {
+      const k = c.dataset.cat;
+      pref.hide = pref.hide.includes(k) ? pref.hide.filter(x => x !== k) : pref.hide.concat(k);
+      applyColors(); save();
+    });
+  });
+  if (sw) sw.addEventListener('change', () => { pref.off = !sw.checked; applyColors(); save(); });
+  applyColors();
+
+  // Boutons « Voir des exemples » (un par concept) + bouton global
+  const setEx = (btn, open) => {
+    const box = btn.nextElementSibling; if (!box) return;
+    box.hidden = !open; btn.setAttribute('aria-expanded', open);
+    btn.textContent = open ? 'Masquer les exemples' : 'Voir des exemples';
+  };
+  const exBtns = $$('.concept > .btn-ex');
+  exBtns.forEach(b => b.addEventListener('click', () => setEx(b, b.getAttribute('aria-expanded') !== 'true')));
+  const all = $('#ex-all');
+  if (all) {
+    if (!exBtns.length) all.parentElement.remove();
+    else all.addEventListener('click', () => {
+      const open = all.getAttribute('aria-expanded') !== 'true';
+      exBtns.forEach(b => setEx(b, open)); all.setAttribute('aria-expanded', open);
+      all.textContent = open ? 'Masquer tous les exemples' : 'Voir tous les exemples';
+    });
+  }
+
+  // Étiquette de langage sur les blocs de code
+  $$('pre > code[class*="lang-"]').forEach(c => c.parentElement.dataset.lang = c.className.match(/lang-(\S+)/)[1]);
+
+  // Ouverture directe sur une ancre
+  const target = location.hash && document.getElementById(location.hash.slice(1));
+  if (target && target.closest('#page-eval')) showPage('page-eval'); else buildTitles();
+  if (target) setTimeout(() => target.scrollIntoView(), 50);
+})();
+</script>
+</body>
+</html>
