@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T18:50",
+    "mis_a_jour":  "2026-11-05T18:52",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -143,7 +143,7 @@
                                                   },
                                "concepts":  "Chaque concept : bloc :::concept avec @theorie / @pratique / @exemple ; exemple tiré du cours en priorité ; bouton Voir des exemples si exemple riche",
                                "notation":  "Compréhension /10 + Taux de prise de notes par chapitre /10 + bonus recherche perso jusqu à +3, plafond 20",
-                               "synchro_git":  "GitHub privé LevGend/correction-cours : pull au démarrage de chaque session (lancé par l orchestrateur), commit + push après chaque modification et chaque traitement ; input/, work/, archive/ restent locaux"
+                               "synchro_git":  "GitHub privé LevGend/correction-cours : pull au démarrage de chaque session (hook SessionStart, sinon l orchestrateur), commit + push après chaque modification et chaque traitement ; input/, work/, archive/ restent locaux"
                            },
     "traitements":  [
                         {
@@ -457,6 +457,11 @@
                         "date":  "2026-11-05T18:50",
                         "acteur":  "orchestrateur",
                         "action":  "C19 enregistrée : synchro GitHub permanente (règle CLAUDE.md ; hook SessionStart refusé par le mode auto, pull manuel par l orchestrateur)"
+                    },
+                    {
+                        "date":  "2026-11-05T18:52",
+                        "acteur":  "orchestrateur",
+                        "action":  "C19 : hook SessionStart git pull ajouté (.claude/settings.json) avec l autorisation de l utilisateur, testé OK"
                     }
                 ]
 }

@@ -37,7 +37,7 @@ La session principale **est** l'orchestrateur : un sous-agent ne peut pas lancer
 
 ### Synchronisation GitHub (2 PC)
 Le projet vit dans le dépôt privé `LevGend/correction-cours` ; l'orchestrateur est chargé de le **maintenir à jour**.
-- **Début de session :** avant toute autre action (même avant de lire `suivi.json`), l'orchestrateur lance `git pull --ff-only`. En cas d'échec (conflit, modifications locales), il le règle d'abord.
+- **Début de session :** un hook `SessionStart` (`.claude/settings.json`) lance `git pull --ff-only` et affiche `[synchro] git pull OK` ou `[synchro] ECHEC…`. Si le hook n'a rien affiché, l'orchestrateur lance lui-même le pull avant toute autre action ; en cas d'échec (conflit, modifications locales), il le règle d'abord.
 - **Après chaque modification du projet** (agents, scripts, gabarit, `CLAUDE.md`, `suivi.json`) : commit au message clair en français, puis `git push`.
 - **Fin de traitement :** commit de `output/…html` et `suivi.json`, puis `git push`, avant de rendre la main.
 - `input/`, `work/` et `archive/` restent locaux (`.gitignore`) : ne jamais les forcer dans le dépôt.
