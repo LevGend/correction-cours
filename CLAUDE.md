@@ -35,6 +35,14 @@ La session principale **est** l'orchestrateur : un sous-agent ne peut pas lancer
 - `traitements[]` : un objet par cours traité, avec `id`, `debut`, `statut` (`en_cours` / `termine` / `echec`), `fichiers_entree`, `titre`, `note`, `fichier_final`, et `etapes{}` (pour chaque étape : `statut`, `modele`, `raison_modele`, `tentatives`, `sorties`, `controle`, `remarques`)
 - `journal[]` : historique horodaté des actions
 
+### Synchronisation GitHub (2 PC)
+Le projet vit dans le dépôt privé `LevGend/correction-cours` ; l'orchestrateur est chargé de le **maintenir à jour**.
+- **Début de session :** avant toute autre action (même avant de lire `suivi.json`), l'orchestrateur lance `git pull --ff-only`. En cas d'échec (conflit, modifications locales), il le règle d'abord.
+- **Après chaque modification du projet** (agents, scripts, gabarit, `CLAUDE.md`, `suivi.json`) : commit au message clair en français, puis `git push`.
+- **Fin de traitement :** commit de `output/…html` et `suivi.json`, puis `git push`, avant de rendre la main.
+- `input/`, `work/` et `archive/` restent locaux (`.gitignore`) : ne jamais les forcer dans le dépôt.
+- Ne jamais réécrire l'historique publié (`push --force`, `rebase` de commits poussés).
+
 ## Dossiers
 - `input/` : fichiers déposés par l'étudiant (export OneNote + support de cours éventuel)
 - `work/` : fichiers intermédiaires produits par les agents

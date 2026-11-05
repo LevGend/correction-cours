@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T18:47",
+    "mis_a_jour":  "2026-11-05T18:50",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -110,6 +110,12 @@
                           "date":  "2026-11-05T18:16",
                           "statut":  "active",
                           "texte":  "Créer un dépôt git pour travailler sur le projet depuis 2 PC. Hébergement choisi : GitHub privé."
+                      },
+                      {
+                          "id":  "C19",
+                          "date":  "2026-11-05T18:50",
+                          "statut":  "active",
+                          "texte":  "Environnement de travail sur GitHub (LevGend/correction-cours, privé). L orchestrateur maintient le projet à jour : git pull au début de chaque session, commit + push après chaque modification du projet et à la fin de chaque traitement."
                       }
                   ],
     "regles_permanentes":  {
@@ -136,7 +142,8 @@
                                                       "publieur":  "sonnet (seulement si bug)"
                                                   },
                                "concepts":  "Chaque concept : bloc :::concept avec @theorie / @pratique / @exemple ; exemple tiré du cours en priorité ; bouton Voir des exemples si exemple riche",
-                               "notation":  "Compréhension /10 + Taux de prise de notes par chapitre /10 + bonus recherche perso jusqu à +3, plafond 20"
+                               "notation":  "Compréhension /10 + Taux de prise de notes par chapitre /10 + bonus recherche perso jusqu à +3, plafond 20",
+                               "synchro_git":  "GitHub privé LevGend/correction-cours : pull au démarrage de chaque session (lancé par l orchestrateur), commit + push après chaque modification et chaque traitement ; input/, work/, archive/ restent locaux"
                            },
     "traitements":  [
                         {
@@ -445,6 +452,11 @@
                         "date":  "2026-11-05T18:47",
                         "acteur":  "orchestrateur",
                         "action":  "C18 : dépôt GitHub privé créé (https://github.com/LevGend/correction-cours), main poussé, gh installé via winget"
+                    },
+                    {
+                        "date":  "2026-11-05T18:50",
+                        "acteur":  "orchestrateur",
+                        "action":  "C19 enregistrée : synchro GitHub permanente (règle CLAUDE.md ; hook SessionStart refusé par le mode auto, pull manuel par l orchestrateur)"
                     }
                 ]
 }
