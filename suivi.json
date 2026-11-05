@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T18:16",
+    "mis_a_jour":  "2026-11-05T18:47",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -440,6 +440,11 @@
                         "date":  "2026-11-05T18:16",
                         "acteur":  "orchestrateur",
                         "action":  "Dépôt git local initialisé (branche main, 1er commit). input/, work/ et archive/ exclus (supports protégés, captures avec mots de passe). En attente : URL du dépôt GitHub privé et dossier définitif du projet."
+                    },
+                    {
+                        "date":  "2026-11-05T18:47",
+                        "acteur":  "orchestrateur",
+                        "action":  "C18 : dépôt GitHub privé créé (https://github.com/LevGend/correction-cours), main poussé, gh installé via winget"
                     }
                 ]
 }
