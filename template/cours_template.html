@@ -11,6 +11,7 @@
 <meta name="cours-themes" content="{{META_THEMES}}">
 <meta name="cours-quiz" content="{{META_QUIZ}}">
 <meta name="cours-revision" content="{{META_REVISION}}">
+<meta name="cours-sigles" content="{{META_SIGLES}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
 <style>
@@ -165,6 +166,29 @@ body.no-colors :is(div.ai,div.hors){border-left:0;padding:0}
 body.no-colors del{display:none}
 body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
 
+/* ===== Chapitre 0 « Lexique » : index de référence, neutre ===== */
+section.theme.lexique{border-top-color:var(--text-3)}
+section.theme.lexique>h2 .num{background:var(--surface-3);color:var(--text)}
+.panel-titles a[data-num="0"] .num{background:transparent;border:1px solid var(--text-3)}
+table.lex-sigles td.sig-name{font-family:var(--mono);font-weight:500;font-size:13.5px;color:#fff;white-space:nowrap;width:1%}
+
+/* ===== Sigles : info-bulle au survol, au focus et au toucher =====
+   Indice neutre (pointillé gris) : la couleur du texte reste celle de sa provenance ; ≠ cyan pointillé de .gap */
+abbr.sig{text-decoration:none;border-bottom:1px dotted rgba(232,232,236,.42);cursor:help;border-radius:2px;color:inherit;
+  transition:background .15s,border-color .15s;-webkit-tap-highlight-color:transparent}
+abbr.sig:hover,abbr.sig.on{background:rgba(255,255,255,.08);border-bottom-color:var(--text-2)}
+abbr.sig:focus{outline:none}
+abbr.sig:focus-visible{outline:2px solid var(--primary);outline-offset:1px}
+#sig-tip{position:fixed;z-index:60;left:0;top:0;max-width:min(340px,calc(100vw - 16px));padding:8px 12px;border-radius:8px;
+  background:#3a3a41;color:var(--text);border:1px solid rgba(255,255,255,.08);box-shadow:var(--shadow-2);
+  font:400 13.5px/1.45 var(--font);pointer-events:none;animation:tip .12s ease}
+#sig-tip[hidden]{display:none}
+#sig-tip b{font:500 13px var(--mono);color:#fff;margin-right:8px}
+#sig-tip::after{content:"";position:absolute;left:var(--ax,50%);bottom:-5px;width:9px;height:9px;margin-left:-5px;background:#3a3a41;
+  border:solid rgba(255,255,255,.08);border-width:0 1px 1px 0;transform:rotate(45deg)}
+#sig-tip.below::after{bottom:auto;top:-5px;border-width:1px 0 0 1px}
+@keyframes tip{from{opacity:0}to{opacity:1}}
+
 /* ===== Page Évaluation ===== */
 #page-eval{max-width:1000px}
 .eval-head{display:grid;grid-template-columns:200px 1fr;gap:24px;margin-bottom:28px}
@@ -261,7 +285,7 @@ section.sub.qcm>h3.qcm-head{font-size:15px;color:var(--text);margin-bottom:8px}
   .qcm{padding:12px 12px 14px}
 }
 @media (max-width:700px){ .toc{width:100%;grid-template-columns:42% 58%} .eval-head,.cards-2{grid-template-columns:1fr} section.theme{padding:22px 18px} .tpe{grid-template-columns:1fr;gap:6px} .tpe-label{justify-self:start} }
-@media print{ .appbar,.toc,.btn-ex{display:none!important} .content{margin:0;padding:0} .page{display:block!important} .tpe[hidden]{display:grid} }
+@media print{ .appbar,.toc,.btn-ex,#sig-tip{display:none!important} abbr.sig{border-bottom:0} .content{margin:0;padding:0} .page{display:block!important} .tpe[hidden]{display:grid} }
 </style>
 </head>
 <body>
@@ -395,9 +419,10 @@ section.sub.qcm>h3.qcm-head{font-size:15px;color:var(--text);margin-bottom:8px}
       if (!t.id) t.id = page.id + '-t' + (i + 1);
       const h2 = $(':scope > h2', t);
       const label = h2.textContent.trim();
-      if (!$('.num', h2)) h2.insertAdjacentHTML('afterbegin', `<span class="num">${i + 1}</span>`);
+      const n = t.dataset.num != null ? t.dataset.num : i + 1;  // chapitre 0 « Lexique » : data-num="0"
+      if (!$('.num', h2)) h2.insertAdjacentHTML('afterbegin', `<span class="num">${n}</span>`);
       const li = document.createElement('li');
-      li.innerHTML = `<a href="#${t.id}" data-theme="${t.id}"><span class="num">${i + 1}</span><span>${label}</span></a>`;
+      li.innerHTML = `<a href="#${t.id}" data-theme="${t.id}" data-num="${n}"><span class="num">${n}</span><span>${label}</span></a>`;
       li.firstChild.addEventListener('mouseenter', () => showSubs(t));
       li.firstChild.addEventListener('click', e => { e.preventDefault(); goto(t); setTheme(t); });
       titlesUl.appendChild(li);
@@ -455,7 +480,7 @@ section.sub.qcm>h3.qcm-head{font-size:15px;color:var(--text);margin-bottom:8px}
   function showPage(id) {
     $$('.page').forEach(p => p.classList.toggle('active', p.id === id));
     $$('.tab').forEach(b => b.classList.toggle('active', b.dataset.page === id));
-    page = $('#' + id); subsUl.dataset.theme = ''; scrollTo(0, 0); buildTitles();
+    page = $('#' + id); subsUl.dataset.theme = ''; scrollTo(0, 0); buildTitles(); hideTip();
   }
   $$('.tab').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
 
@@ -566,6 +591,61 @@ section.sub.qcm>h3.qcm-head{font-size:15px;color:var(--text);margin-bottom:8px}
   const resetAll = () => { qcms.forEach(clearQcm); series.forEach(r => r()); };
   resetAll();
   addEventListener('pageshow', e => { if (e.persisted) resetAll(); });
+
+  // ===== Sigles : info-bulle stylée (souris, clavier, toucher) =====
+  // md2html.ps1 enveloppe chaque sigle dans abbr.sig avec un title ; le title natif est déplacé dans data-def (pas de double bulle).
+  const sigs = $$('abbr.sig');
+  let tip = null, tipFor = null, tipAt = 0, lastPointer = 'mouse';
+  function hideTip() {
+    if (!tipFor) return;
+    tipFor.classList.remove('on'); tipFor.removeAttribute('aria-describedby');
+    tipFor = null; tip.hidden = true;
+  }
+  if (sigs.length) {
+    tip = document.createElement('div');
+    tip.id = 'sig-tip'; tip.setAttribute('role', 'tooltip'); tip.hidden = true;
+    document.body.appendChild(tip);
+    sigs.forEach(a => { a.dataset.def = a.title; a.removeAttribute('title'); a.tabIndex = 0; });
+    const place = a => {
+      const rs = a.getClientRects(), r = rs.length ? rs[0] : a.getBoundingClientRect();
+      const tw = tip.offsetWidth, th = tip.offsetHeight, top = $('.appbar').offsetHeight + 8;
+      let x = Math.max(8, Math.min(r.left + r.width / 2 - tw / 2, innerWidth - tw - 8));
+      let y = r.top - th - 9, below = y < top;
+      if (below) y = r.bottom + 9;
+      tip.classList.toggle('below', below);
+      tip.style.left = x + 'px'; tip.style.top = y + 'px';
+      tip.style.setProperty('--ax', Math.max(12, Math.min(tw - 12, r.left + r.width / 2 - x)) + 'px');
+    };
+    const showTip = a => {
+      if (tipFor && tipFor !== a) hideTip();
+      const b = document.createElement('b');
+      b.textContent = a.dataset.sig || a.textContent;
+      tip.replaceChildren(b, document.createTextNode(a.dataset.def));
+      tip.hidden = false; tipFor = a; tipAt = Date.now();
+      a.classList.add('on'); a.setAttribute('aria-describedby', 'sig-tip');
+      place(a);
+    };
+    const sigOf = e => e.target.closest && e.target.closest('abbr.sig');
+    document.addEventListener('pointerdown', e => { lastPointer = e.pointerType || 'mouse'; }, true);
+    document.addEventListener('pointerover', e => { if (e.pointerType === 'mouse') { const a = sigOf(e); if (a) showTip(a); } });
+    document.addEventListener('pointerout', e => {
+      if (e.pointerType !== 'mouse' || !tipFor) return;
+      const a = sigOf(e);
+      if (a === tipFor && !a.contains(e.relatedTarget) && !a.matches(':focus-visible')) hideTip();
+    });
+    document.addEventListener('focusin', e => { const a = sigOf(e); if (a) showTip(a); });
+    document.addEventListener('focusout', e => { if (sigOf(e) === tipFor) hideTip(); });
+    // Toucher : un appui affiche la bulle, un second appui (ou un appui ailleurs) la ferme
+    document.addEventListener('click', e => {
+      const a = sigOf(e);
+      if (a && lastPointer !== 'mouse') {
+        if (tipFor === a && Date.now() - tipAt > 400) { hideTip(); a.blur(); } else showTip(a);
+      } else if (!a && tipFor && lastPointer !== 'mouse') hideTip();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') hideTip(); });
+    addEventListener('scroll', () => { if (tipFor && document.activeElement !== tipFor) hideTip(); else if (tipFor) place(tipFor); }, { passive: true });
+    addEventListener('resize', hideTip);
+  }
 
   // Ouverture directe sur une ancre (#t-…, #q-…, #e-…) : affiche l'onglet qui la contient
   function openHash(smooth) {

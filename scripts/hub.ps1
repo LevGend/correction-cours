@@ -1,8 +1,8 @@
 # hub.ps1 - Genere output/index.html (le Hub) : une carte par cours publie output/COURS_CORRECTION_IA_DDMMYYYY_HHMM.html.
 # Usage : powershell -NoProfile -ExecutionPolicy Bypass -File scripts\hub.ps1 [-OutDir output] [-Out output\index.html]
-# Donnees lues dans les <meta name="cours-titre|cours-date|cours-note|cours-themes|cours-quiz"> des pages.
+# Donnees lues dans les <meta name="cours-titre|cours-date|cours-note|cours-themes|cours-quiz|cours-sigles"> des pages.
 # Repli pour les anciennes pages sans meta : titre depuis <title> (sans " - Correction IA"), note depuis .chip-score,
-# date depuis le nom du fichier, themes comptes dans le HTML, questions = 0.
+# date depuis le nom du fichier, themes comptes dans le HTML, questions = 0, sigles = 0 (pastille "N sigles" masquee).
 # Fichier ASCII uniquement (compatible Windows PowerShell 5.1).
 param(
   [string]$Root = (Split-Path $PSScriptRoot -Parent),
@@ -51,7 +51,9 @@ foreach ($f in (Get-ChildItem -LiteralPath (P $OutDir) -Filter 'COURS_CORRECTION
   $quiz = 0
   if ($meta['cours-quiz'] -match '^\d+$') { $quiz = [int]$meta['cours-quiz'] }
   else { $quiz = [regex]::Matches($html, 'class="sub qcm quiz"').Count }
-  [void]$items.Add([pscustomobject]@{ File = $f.Name; Stamp = $stamp; Titre = $titre; Note = $note; NoteNum = $noteNum; Date = $date; Themes = $themes; Quiz = $quiz })
+  $sigles = 0
+  if ($meta['cours-sigles'] -match '^\d+$') { $sigles = [int]$meta['cours-sigles'] }
+  [void]$items.Add([pscustomobject]@{ File = $f.Name; Stamp = $stamp; Titre = $titre; Note = $note; NoteNum = $noteNum; Date = $date; Themes = $themes; Quiz = $quiz; Sigles = $sigles })
 }
 $items = @($items | Sort-Object Stamp -Descending)
 
@@ -68,7 +70,8 @@ foreach ($it in $items) {
   [void]$sb.Append('  <div class="card-top"><span class="date">' + $when + '</span><span class="note' + $cls + '">' + $noteTxt + "</span></div>`n")
   [void]$sb.Append('  <h2>' + (Esc $it.Titre) + "</h2>`n")
   $qtxt = if ($it.Quiz -gt 0) { (Plural $it.Quiz 'question') + ' de quiz' } else { 'Pas de quiz' }
-  [void]$sb.Append('  <div class="meta"><span>' + (Plural $it.Themes ('th' + $eg + 'me')) + '</span><span>' + $qtxt + "</span></div>`n</a>`n")
+  $stxt = if ($it.Sigles -gt 0) { '<span>' + (Plural $it.Sigles 'sigle') + '</span>' } else { '' }
+  [void]$sb.Append('  <div class="meta"><span>' + (Plural $it.Themes ('th' + $eg + 'me')) + '</span><span>' + $qtxt + '</span>' + $stxt + "</div>`n</a>`n")
 }
 
 $notes = @($items | Where-Object { $null -ne $_.NoteNum } | ForEach-Object { $_.NoteNum })
@@ -87,5 +90,5 @@ $dest = P $Out
 New-Item -ItemType Directory -Force -Path (Split-Path $dest -Parent) | Out-Null
 [IO.File]::WriteAllText($dest, $result, $utf8)
 Write-Host ('Hub : ' + $items.Count + ' cours, moyenne ' + $moy.Replace('&ndash;', '-') + ' /20, ' + $totalQ + ' questions de quiz')
-foreach ($it in $items) { Write-Host ('  ' + $it.File + ' | ' + $it.Note + ' | ' + $it.Themes + ' themes | ' + $it.Quiz + ' questions') }
+foreach ($it in $items) { Write-Host ('  ' + $it.File + ' | ' + $it.Note + ' | ' + $it.Themes + ' themes | ' + $it.Quiz + ' questions | ' + $it.Sigles + ' sigles') }
 Write-Output $dest

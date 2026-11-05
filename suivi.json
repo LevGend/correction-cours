@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T20:33",
+    "mis_a_jour":  "2026-11-05T20:46",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -539,6 +539,21 @@
                         "date":  "2026-11-05T20:33",
                         "acteur":  "orchestrateur",
                         "action":  "Professeur (opus, toujours opus) lancé : 02_sigles.md pour VMware (work/) et Proxmox (archive/T1_proxmox/). Publieur (opus, évolution du rendu) lancé en parallèle : chapitre 0 et info-bulles des sigles"
+                    },
+                    {
+                        "date":  "2026-11-05T20:36",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur : 02_sigles.md produit (VMware 102 sigles, Proxmox 85) ; contrôle format OK à vérifier à la publication. Organisateur (sonnet, insertion ciblée) lancé : chapitre 0 Lexique sur les 2 cours"
+                    },
+                    {
+                        "date":  "2026-11-05T20:40",
+                        "acteur":  "orchestrateur",
+                        "action":  "Organisateur : chapitre 0 Lexique inséré (VMware, Proxmox). Contrôle : re-rendu avec les anciens scripts git et comparaison aux pages commitées -\u003e VMware identique hors Lexique, Proxmox identique hors déplacement du lexique étudiant en ### Notions ; tableaux Sigles identiques à 02_sigles.md"
+                    },
+                    {
+                        "date":  "2026-11-05T20:46",
+                        "acteur":  "orchestrateur",
+                        "action":  "Publieur (opus) : chapitre 0 et info-bulles des sigles codés (md2html -SiglesFile, fichiers pris dans le dossier de -Cours). VMware et Proxmox republiés, Hub régénéré. Contrôles OK : 42/42 concepts, balises de couleur identiques, abbr 944 (VMware) / 275 (Proxmox), aucun dans pre/code, Lexique t-0 ; survol testé dans le navigateur. Sigles jamais trouvés : HOL (VMware), GbE (Proxmox). Question ouverte : info-bulles qui soufflent les réponses du quiz"
                     }
                 ]
 }
