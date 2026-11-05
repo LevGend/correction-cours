@@ -72,8 +72,13 @@ Le fichier contient deux parties, dans ce format **exact** (le script de publica
 # Révision
 ## Thème (titre H2 recopié à l'identique)
 ### Sous-thème (titre H3 recopié à l'identique)
-Q: Question courte de compréhension, ouverte.
-R: Réponse en 1 à 2 phrases.
+Énoncé de la petite question de compréhension.
+- A) Proposition
+- B) Proposition
+- C) Proposition
+- D) Proposition
+Réponse : C
+Explication : Une phrase qui justifie la bonne réponse.
 
 # Quiz
 ## QCM 1
@@ -89,11 +94,11 @@ Explication : Une phrase qui justifie la bonne réponse.
 
 ### Révision
 - **Une question par H3**, dans l'ordre du cours, sous ses titres H2 et H3 recopiés **caractère pour caractère** (sans balise de couleur ni numéro).
-- Question ouverte qui vérifie la compréhension du sous-thème (le « pourquoi » ou le « comment »), pas une simple définition à recracher.
+- C'est un **QCM** (4 propositions A à D, une seule juste, lignes `Réponse :` et `Explication :`) qui vérifie la compréhension du sous-thème (le « pourquoi » ou le « comment »), pas une simple définition à recracher. Il s'affiche juste après le sous-thème dans l'onglet Cours.
 
 ### Quiz
 - **Une question QCM par sous-thème**, **deux** si le sous-thème est conséquent (plusieurs concepts ou un TP). Dans l'ordre du cours.
-- Les questions sont **différentes** de celles de révision.
+- Les questions sont **différentes** de celles de révision (autre notion ou autre angle).
 - Découpe en séries `## QCM 1`, `## QCM 2`… de **20 questions au plus**, de tailles équilibrées (38 questions → 19 + 19). La numérotation `Q1…` repart à 1 dans chaque série.
 - Après `·`, le nom du sous-thème (court) d'où vient la question.
 - 4 propositions A à D, **une seule** juste. Les mauvaises réponses sont plausibles (erreurs fréquentes, confusions proches), jamais absurdes. Varie la position de la bonne réponse.

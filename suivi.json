@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T19:29",
+    "mis_a_jour":  "2026-11-05T19:30",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -292,13 +292,13 @@
                                            "quiz":  {
                                                         "modele":  "opus",
                                                         "raison_modele":  "professeur : toujours opus (exactitude critique)",
-                                                        "tentatives":  1,
                                                         "sorties":  [
                                                                         "work/04_quiz.md"
                                                                     ],
                                                         "remarques":  "Ajout a posteriori (C20) sur le cours VMware",
-                                                        "statut":  "termine",
-                                                        "controle":  "OK : 36/36 questions de révision appariées, 54 QCM en 3 séries de 18, réponses A=12 B=13 C=15 D=14, 42/42 concepts, aucun {{…}}, onglets / correction / Hub testés dans le navigateur (bureau et mobile)"
+                                                        "controle":  "OK : 36/36 questions de révision appariées, 54 QCM en 3 séries de 18, réponses A=12 B=13 C=15 D=14, 42/42 concepts, aucun {{…}}, onglets / correction / Hub testés dans le navigateur (bureau et mobile)",
+                                                        "statut":  "en_cours",
+                                                        "tentatives":  "2"
                                                     }
                                        },
                             "note":  "15,5",
@@ -512,6 +512,11 @@
                         "date":  "2026-11-05T19:29",
                         "acteur":  "orchestrateur",
                         "action":  "Rollback du code C20 (gabarit, md2html.ps1, hub, rendus) vers 5e51093 ; work/04_quiz.md conservé"
+                    },
+                    {
+                        "date":  "2026-11-05T19:30",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur (quiz, opus) relancé : partie Révision en QCM. Publieur (opus, évolution du rendu : Hub, QCM, quiz ; opus car développement de fonctionnalités et non simple dépannage) lancé en parallèle"
                     }
                 ]
 }

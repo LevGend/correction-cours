@@ -11,11 +11,12 @@ La session principale **est** l'orchestrateur : un sous-agent ne peut pas lancer
   - traducteur : `01_notes.md` existe, n'est pas vide et couvre tout le fichier source
   - professeur : `02_corrige.md` est complet (même nombre de pages que `01_notes.md`), toutes les balises de couleur sont fermées, chaque bloc `:::concept` a ses volets `@theorie` et `@pratique` et se ferme par `:::`
   - évaluateur : `02_evaluation.md` respecte le format (note /20 = Compréhension + Taux + Bonus plafonnée à 20, tableau « Taux par chapitre », section « Pour aller plus loin »)
-  - quiz (professeur, mission 2) : `04_quiz.md` a une question `Q:`/`R:` par H3 de `03_organise.md` (titres identiques), une à deux questions QCM par H3, séries `## QCM n` de 20 questions au plus, 4 propositions et une ligne `Réponse :` par question ; `md2html.ps1` ne signale aucun sous-thème « sans question de révision »
+  - quiz (professeur, mission 2) : `04_quiz.md` a une petite question QCM par H3 (partie `# Révision`) de `03_organise.md` (titres identiques), une à deux questions QCM par H3, séries `## QCM n` de 20 questions au plus, 4 propositions et une ligne `Réponse :` par question ; `md2html.ps1` ne signale aucun sous-thème « sans question de révision »
   - organisateur : aucune perte de contenu par rapport à `02_corrige.md`, balises de couleur conservées (`perso`, `del`, `fix`, `ai`, `hors`, `gap`), autant de blocs `:::concept` qu'en entrée, chaque H2 a au moins un H3, `03_titre.txt` fait 40 caractères au maximum
-  - publication : le nom de fichier respecte le format, le HTML est bien formé, les 3 onglets (Cours, Quiz, Bilan & plus loin) et le sommaire fonctionnent, une question de révision par sous-thème, le bouton « Corriger » du quiz affiche le score, `output/index.html` (Hub) liste le cours, un `.concept` par bloc `:::concept`, les boutons « Voir des exemples », la légende et l'interrupteur fonctionnent, il ne reste aucun `{{…}}`
+  - publication : le nom de fichier respecte le format, le HTML est bien formé, les 3 onglets (Cours, Quiz, Bilan & plus loin) et le sommaire fonctionnent, une petite question QCM par sous-thème, un code couleur de correction dans les QCM, le bouton « Corriger » du quiz affiche le score, `output/index.html` (Hub) liste le cours, un `.concept` par bloc `:::concept`, les boutons « Voir des exemples », la légende et l'interrupteur fonctionnent, il ne reste aucun `{{…}}`
 - **Parallélisme :** l'évaluateur et l'organisateur partent tous les deux de `02_corrige.md` et n'écrivent pas les mêmes fichiers. L'orchestrateur les lance **dans le même message**, puis attend les deux avant de publier. Le **professeur (quiz)** part de `03_organise.md` : il est lancé dès que l'organisateur a fini, sans attendre l'évaluateur.
 - **Publication par script :** l'orchestrateur lance lui-même `scripts/md2html.ps1`. Il régénère ensuite le Hub avec `scripts/hub.ps1`. L'agent **publieur** n'est appelé que si le script échoue ou si le contrôle de publication échoue.
+- **Le code, c'est le publieur :** toute évolution du rendu (gabarits `template/`, `md2html.ps1`, `hub.ps1`, CSS/JS) est codée par l'agent **publieur**, qui connaît les règles du rendu. L'orchestrateur ne code pas lui-même : il écrit le cahier des charges, lance le publieur, puis contrôle, teste dans le navigateur et pousse.
 - **Choix du modèle selon la complexité** (paramètre `model` de l'outil Agent) :
 
   | Étape | Par défaut | Monter d'un cran si… |
@@ -65,7 +66,7 @@ Le projet vit dans le dépôt privé `LevGend/correction-cours` ; l'orchestrateu
    - **évaluateur** : `01_notes.md` + `01_support.md` + `02_corrige.md` → `work/02_evaluation.md`
    - **organisateur** : `work/02_corrige.md` → `work/03_organise.md` + `work/03_titre.txt`
    → l'orchestrateur renomme ensuite la conversation avec le contenu de `03_titre.txt`
-4. **professeur (quiz)** : `work/03_organise.md` → `work/04_quiz.md` (question de révision par sous-thème + QCM en séries de 20, réponses à la fin). Lancé dès la fin de l'organisateur.
+4. **professeur (quiz)** : `work/03_organise.md` → `work/04_quiz.md` (petite question QCM par sous-thème + quiz QCM en séries de 20, réponses à la fin). Lancé dès la fin de l'organisateur.
 5. **Publication** (orchestrateur, par script) : `scripts/md2html.ps1 -Date … -Note … -Out output/COURS_CORRECTION_IA_<date>_<heure>.html`, puis `scripts/hub.ps1`. En cas d'échec : agent **publieur**.
 6. L'orchestrateur affiche dans le chat le court message de l'évaluateur avec la note /20.
 
