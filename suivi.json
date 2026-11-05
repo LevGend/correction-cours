@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T19:17",
+    "mis_a_jour":  "2026-11-05T19:29",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -122,6 +122,12 @@
                           "date":  "2026-11-05T19:11",
                           "statut":  "active",
                           "texte":  "Hub : page principale (output/index.html) pour naviguer entre les cours. Une question de révision après chaque sous-thème (différente du quiz, réponse dépliable). Quiz final créé par le professeur : une question QCM par sous-thème (deux si conséquent), découpé en plusieurs QCM de 20 questions ; réponses à la fin. Onglets en haut à droite : Cours, Quiz, Bilan \u0026 plus loin. Appliquer au cours VMware (fichiers de travail présents) ; Proxmox reste tel quel dans le Hub."
+                      },
+                      {
+                          "id":  "C21",
+                          "date":  "2026-11-05T19:29",
+                          "statut":  "active",
+                          "texte":  "Le code (gabarits, scripts de rendu, Hub) est délégué à l\u0027agent publieur, qui a déjà les règles : l\u0027orchestrateur ne code pas lui-même. Rollback du code écrit par l\u0027orchestrateur pour C20, puis réalisation par le publieur. Les questions de fin de sous-thème deviennent des QCM. Sur le Hub, un clic n\u0027importe où sur la carte ouvre le cours. Code couleur de correction dans les QCM."
                       }
                   ],
     "regles_permanentes":  {
@@ -150,7 +156,8 @@
                                "concepts":  "Chaque concept : bloc :::concept avec @theorie / @pratique / @exemple ; exemple tiré du cours en priorité ; bouton Voir des exemples si exemple riche",
                                "notation":  "Compréhension /10 + Taux de prise de notes par chapitre /10 + bonus recherche perso jusqu à +3, plafond 20",
                                "synchro_git":  "GitHub privé LevGend/correction-cours : pull au démarrage de chaque session (hook SessionStart, sinon l orchestrateur), commit + push après chaque modification et chaque traitement ; input/, work/, archive/ restent locaux",
-                               "quiz":  "Étape 4 professeur (mission quiz) : 03_organise.md -\u003e 04_quiz.md (révision par H3 + QCM en séries de 20). Hub output/index.html régénéré par scripts/hub.ps1 après chaque publication."
+                               "quiz":  "Étape 4 professeur (mission quiz) : 03_organise.md -\u003e 04_quiz.md (révision par H3 + QCM en séries de 20). Hub output/index.html régénéré par scripts/hub.ps1 après chaque publication.",
+                               "code":  "Toute modification de template/ ou des scripts de rendu (md2html.ps1, hub.ps1) est faite par l\u0027agent publieur sur cahier des charges de l\u0027orchestrateur."
                            },
     "traitements":  [
                         {
@@ -495,6 +502,16 @@
                         "date":  "2026-11-05T19:17",
                         "acteur":  "orchestrateur",
                         "action":  "VMware republié avec quiz (même fichier output/COURS_CORRECTION_IA_05112026_1723.html) ; Hub output/index.html généré (2 cours)"
+                    },
+                    {
+                        "date":  "2026-11-05T19:29",
+                        "acteur":  "orchestrateur",
+                        "action":  "C21 enregistrée : rollback du code C20, délégation au publieur, révision en QCM, carte du Hub cliquable, code couleur de correction"
+                    },
+                    {
+                        "date":  "2026-11-05T19:29",
+                        "acteur":  "orchestrateur",
+                        "action":  "Rollback du code C20 (gabarit, md2html.ps1, hub, rendus) vers 5e51093 ; work/04_quiz.md conservé"
                     }
                 ]
 }
