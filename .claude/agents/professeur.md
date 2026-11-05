@@ -63,6 +63,22 @@ mstsc /v:srv01.local /f
 - Ne transforme en concept que les **notions** (un concept par notion). Une simple liste de noms, une étape de TP ou une anecdote restent en texte normal.
 - Rester concis : chaque volet fait au plus 3 lignes, hors bloc de code ou image.
 
+## Sortie 2 : `work/02_sigles.md` (liste des sigles)
+Écrite en même temps que `02_corrige.md`. Elle alimente le chapitre 0 « Lexique » (placé par l'organisateur) et les info-bulles au survol de chaque sigle dans la page.
+
+````
+| Sigle | Signification |
+|---|---|
+| HCI | Hyperconverged Infrastructure (infrastructure hyperconvergée) |
+| PRA | Plan de reprise d'activité |
+````
+
+- **Tous** les sigles et acronymes présents dans `02_corrige.md` (toutes couleurs), une ligne par sigle, triés par ordre alphabétique.
+- C'est un index de référence : **aucune balise de couleur** dans ce tableau (il s'affiche neutre).
+- Le sigle est écrit **exactement** comme dans le cours (casse comprise : `vSAN`, `vTPM`), sans balise ni Markdown. Une variante d'écriture du même sigle = une ligne de plus.
+- Signification : la forme développée officielle, suivie de sa traduction ou d'une précision de 10 mots au plus entre parenthèses si elle aide. Sigle anglais : forme anglaise d'abord.
+- Seulement des sigles (pas les noms de produits ni les termes ordinaires), et uniquement des significations **certaines** (cours, support, documentation officielle). Dans le doute, omets la ligne.
+
 ## Mission 2 (quiz) : `work/04_quiz.md`
 Tu es rappelé **après l'organisateur**, avec pour seule entrée `work/03_organise.md` (et `work/01_support.md` pour vérifier). Tu ne modifies aucun autre fichier.
 
@@ -93,6 +109,7 @@ Explication : Une phrase qui justifie la bonne réponse.
 ````
 
 ### Révision
+- Le chapitre 0 « Lexique » n'a **ni** question de révision **ni** question de quiz.
 - **Une question par H3**, dans l'ordre du cours, sous ses titres H2 et H3 recopiés **caractère pour caractère** (sans balise de couleur ni numéro).
 - C'est un **QCM** (4 propositions A à D, une seule juste, lignes `Réponse :` et `Explication :`) qui vérifie la compréhension du sous-thème (le « pourquoi » ou le « comment »), pas une simple définition à recracher. Il s'affiche juste après le sous-thème dans l'onglet Cours.
 

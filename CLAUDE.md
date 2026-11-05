@@ -10,10 +10,11 @@ La session principale **est** l'orchestrateur : un sous-agent ne peut pas lancer
 - **Contrôle qualité après chaque étape**, avant de passer à la suivante :
   - traducteur : `01_notes.md` existe, n'est pas vide et couvre tout le fichier source
   - professeur : `02_corrige.md` est complet (même nombre de pages que `01_notes.md`), toutes les balises de couleur sont fermées, chaque bloc `:::concept` a ses volets `@theorie` et `@pratique` et se ferme par `:::`
+  - sigles (professeur) : `02_sigles.md` existe, tableau `| Sigle | Signification |` trié, sans balise de couleur, chaque sigle présent dans `02_corrige.md`
   - évaluateur : `02_evaluation.md` respecte le format (note /20 = Compréhension + Taux + Bonus plafonnée à 20, tableau « Taux par chapitre », section « Pour aller plus loin »)
-  - quiz (professeur, mission 2) : `04_quiz.md` a une petite question QCM par H3 (partie `# Révision`) de `03_organise.md` (titres identiques), une à deux questions QCM par H3, séries `## QCM n` de 20 questions au plus, 4 propositions et une ligne `Réponse :` par question ; `md2html.ps1` ne signale aucun sous-thème « sans question de révision »
-  - organisateur : aucune perte de contenu par rapport à `02_corrige.md`, balises de couleur conservées (`perso`, `del`, `fix`, `ai`, `hors`, `gap`), autant de blocs `:::concept` qu'en entrée, chaque H2 a au moins un H3, `03_titre.txt` fait 40 caractères au maximum
-  - publication : le nom de fichier respecte le format, le HTML est bien formé, les 3 onglets (Cours, Quiz, Bilan & plus loin) et le sommaire fonctionnent, une petite question QCM par sous-thème, un code couleur de correction dans les QCM, le bouton « Corriger » du quiz affiche le score, `output/index.html` (Hub) liste le cours, un `.concept` par bloc `:::concept`, les boutons « Voir des exemples », la légende et l'interrupteur fonctionnent, il ne reste aucun `{{…}}`
+  - quiz (professeur, mission 2) : `04_quiz.md` a une petite question QCM par H3 (partie `# Révision`) de `03_organise.md` (titres identiques), une à deux questions QCM par H3, séries `## QCM n` de 20 questions au plus, 4 propositions et une ligne `Réponse :` par question ; `md2html.ps1` ne signale aucun sous-thème « sans question de révision » (hors chapitre 0 Lexique, qui n'a pas de question)
+  - organisateur : aucune perte de contenu par rapport à `02_corrige.md`, balises de couleur conservées (`perso`, `del`, `fix`, `ai`, `hors`, `gap`), autant de blocs `:::concept` qu'en entrée, chaque H2 a au moins un H3, le premier H2 est `## Lexique` (chapitre 0) avec `### Sigles` identique à `02_sigles.md`, `03_titre.txt` fait 40 caractères au maximum
+  - publication : le nom de fichier respecte le format, le HTML est bien formé, les 3 onglets (Cours, Quiz, Bilan & plus loin) et le sommaire fonctionnent, une petite question QCM par sous-thème, un code couleur de correction dans les QCM, le Lexique est le chapitre 0, chaque sigle a son info-bulle au survol (hors code), le bouton « Corriger » du quiz affiche le score, `output/index.html` (Hub) liste le cours, un `.concept` par bloc `:::concept`, les boutons « Voir des exemples », la légende et l'interrupteur fonctionnent, il ne reste aucun `{{…}}`
 - **Parallélisme :** l'évaluateur et l'organisateur partent tous les deux de `02_corrige.md` et n'écrivent pas les mêmes fichiers. L'orchestrateur les lance **dans le même message**, puis attend les deux avant de publier. Le **professeur (quiz)** part de `03_organise.md` : il est lancé dès que l'organisateur a fini, sans attendre l'évaluateur.
 - **Publication par script :** l'orchestrateur lance lui-même `scripts/md2html.ps1`. Il régénère ensuite le Hub avec `scripts/hub.ps1`. L'agent **publieur** n'est appelé que si le script échoue ou si le contrôle de publication échoue.
 - **Le code, c'est le publieur :** toute évolution du rendu (gabarits `template/`, `md2html.ps1`, `hub.ps1`, CSS/JS) est codée par l'agent **publieur**, qui connaît les règles du rendu. L'orchestrateur ne code pas lui-même : il écrit le cahier des charges, lance le publieur, puis contrôle, teste dans le navigateur et pousse.
@@ -50,7 +51,7 @@ Le projet vit dans le dépôt privé `LevGend/correction-cours` ; l'orchestrateu
 - `input/` : fichiers déposés par l'étudiant (export OneNote + support de cours éventuel)
 - `work/` : fichiers intermédiaires produits par les agents
   - `01_notes.md`, `01_support.md` (traducteur)
-  - `02_corrige.md` (professeur)
+  - `02_corrige.md`, `02_sigles.md` (professeur)
   - `02_evaluation.md` (évaluateur)
   - `03_organise.md`, `03_titre.txt` (organisateur)
   - `04_quiz.md` (professeur, mission quiz)
@@ -61,10 +62,10 @@ Le projet vit dans le dépôt privé `LevGend/correction-cours` ; l'orchestrateu
 
 ## Workflow
 1. **traducteur** : `input/*` → `work/01_notes.md` (+ `work/01_support.md` si un support est joint). Pour un `.one`, l'orchestrateur prépare d'abord `work/00_source.txt` et `work/img/` avec `one_export.ps1` et `one_flatten.ps1`.
-2. **professeur** : `work/01_*.md` → `work/02_corrige.md`
+2. **professeur** : `work/01_*.md` → `work/02_corrige.md` + `work/02_sigles.md` (liste des sigles)
 3. En parallèle :
    - **évaluateur** : `01_notes.md` + `01_support.md` + `02_corrige.md` → `work/02_evaluation.md`
-   - **organisateur** : `work/02_corrige.md` → `work/03_organise.md` + `work/03_titre.txt`
+   - **organisateur** : `work/02_corrige.md` + `work/02_sigles.md` → `work/03_organise.md` (chapitre 0 « Lexique » en tête) + `work/03_titre.txt`
    → l'orchestrateur renomme ensuite la conversation avec le contenu de `03_titre.txt`
 4. **professeur (quiz)** : `work/03_organise.md` → `work/04_quiz.md` (petite question QCM par sous-thème + quiz QCM en séries de 20, réponses à la fin). Lancé dès la fin de l'organisateur.
 5. **Publication** (orchestrateur, par script) : `scripts/md2html.ps1 -Date … -Note … -Out output/COURS_CORRECTION_IA_<date>_<heure>.html`, puis `scripts/hub.ps1`. En cas d'échec : agent **publieur**.
@@ -85,6 +86,7 @@ Le projet vit dans le dépôt privé `LevGend/correction-cours` ; l'orchestrateu
   | Cyan pointillé | `[?]` comblé | `<span class="gap">` |
 
   Le rouge est réservé aux corrections : les encadrés `[!…]` sont neutres. Dans la page, la légende est cliquable (masquer une couleur) et un interrupteur active ou désactive toutes les couleurs.
+- **Chapitre 0 « Lexique »** : chaque cours commence par le Lexique (tableau des sigles du professeur, puis lexique de l'étudiant s'il en a un). Dans la page, chaque sigle affiche sa signification au survol. Le tableau des sigles est un index de référence : il reste neutre (pas de couleur de provenance).
 - **Marqueur `[?]`** : l'étudiant l'écrit quand il a raté une information. Le professeur le comble s'il est certain, sinon il le laisse.
 - **Notation** : Compréhension /10 + Taux de prise de notes par chapitre /10 + bonus recherche personnelle jusqu'à +3, plafond 20. La structure et la clarté ne sont pas notées.
 - Codes de style Markdown reconnus par le publieur :

@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T19:45",
+    "mis_a_jour":  "2026-11-05T20:33",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -128,6 +128,12 @@
                           "date":  "2026-11-05T19:29",
                           "statut":  "active",
                           "texte":  "Le code (gabarits, scripts de rendu, Hub) est délégué à l\u0027agent publieur, qui a déjà les règles : l\u0027orchestrateur ne code pas lui-même. Rollback du code écrit par l\u0027orchestrateur pour C20, puis réalisation par le publieur. Les questions de fin de sous-thème deviennent des QCM. Sur le Hub, un clic n\u0027importe où sur la carte ouvre le cours. Code couleur de correction dans les QCM."
+                      },
+                      {
+                          "id":  "C22",
+                          "date":  "2026-11-05T20:32",
+                          "statut":  "active",
+                          "texte":  "Le professeur fournit la liste des sigles du cours. Le chapitre 0 de chaque cours est « Lexique ». Chaque sigle affiche sa signification au survol de la souris. Dispatcher aux agents concernés (professeur, organisateur, publieur) et appliquer aux cours existants (VMware dans work/, Proxmox dans archive/T1_proxmox/)."
                       }
                   ],
     "regles_permanentes":  {
@@ -157,7 +163,8 @@
                                "notation":  "Compréhension /10 + Taux de prise de notes par chapitre /10 + bonus recherche perso jusqu à +3, plafond 20",
                                "synchro_git":  "GitHub privé LevGend/correction-cours : pull au démarrage de chaque session (hook SessionStart, sinon l orchestrateur), commit + push après chaque modification et chaque traitement ; input/, work/, archive/ restent locaux",
                                "quiz":  "Étape 4 professeur (mission quiz) : 03_organise.md -\u003e 04_quiz.md (révision par H3 + QCM en séries de 20). Hub output/index.html régénéré par scripts/hub.ps1 après chaque publication.",
-                               "code":  "Toute modification de template/ ou des scripts de rendu (md2html.ps1, hub.ps1) est faite par l\u0027agent publieur sur cahier des charges de l\u0027orchestrateur."
+                               "code":  "Toute modification de template/ ou des scripts de rendu (md2html.ps1, hub.ps1) est faite par l\u0027agent publieur sur cahier des charges de l\u0027orchestrateur.",
+                               "lexique":  "Professeur -\u003e work/02_sigles.md (tableau Sigle | Signification) ; organisateur -\u003e chapitre 0 « Lexique » en tête de 03_organise.md (H3 Sigles = tableau recopié, H3 Notions = lexique noté par l\u0027étudiant s\u0027il existe) ; publieur -\u003e numéro 0, info-bulle au survol de chaque sigle (md2html -SiglesFile)."
                            },
     "traitements":  [
                         {
@@ -522,6 +529,16 @@
                         "date":  "2026-11-05T19:45",
                         "acteur":  "orchestrateur",
                         "action":  "Publieur (opus) : Hub, petites questions QCM, quiz et code couleur codés ; VMware republié (output/COURS_CORRECTION_IA_05112026_1723.html) et Hub régénéré"
+                    },
+                    {
+                        "date":  "2026-11-05T20:32",
+                        "acteur":  "orchestrateur",
+                        "action":  "C22 enregistrée : sigles (professeur), chapitre 0 Lexique (organisateur), info-bulles (publieur), à appliquer à VMware et Proxmox"
+                    },
+                    {
+                        "date":  "2026-11-05T20:33",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur (opus, toujours opus) lancé : 02_sigles.md pour VMware (work/) et Proxmox (archive/T1_proxmox/). Publieur (opus, évolution du rendu) lancé en parallèle : chapitre 0 et info-bulles des sigles"
                     }
                 ]
 }
