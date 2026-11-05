@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T17:24",
+    "mis_a_jour":  "2026-11-05T18:16",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -104,6 +104,12 @@
                           "date":  "2026-11-05T17:05",
                           "statut":  "active",
                           "texte":  "Nouvelle répartition validée : le professeur est scindé en professeur (correction, couleurs, [?], concepts) et évaluateur (note, taux par chapitre, pistes), qui tourne en parallèle de l organisateur. L orchestrateur lance lui-même md2html.ps1, et l agent publieur n intervient qu en cas de bug. Traducteur sur Haiku sans images."
+                      },
+                      {
+                          "id":  "C18",
+                          "date":  "2026-11-05T18:16",
+                          "statut":  "active",
+                          "texte":  "Créer un dépôt git pour travailler sur le projet depuis 2 PC. Hébergement choisi : GitHub privé."
                       }
                   ],
     "regles_permanentes":  {
@@ -429,6 +435,11 @@
                         "date":  "2026-11-05T17:24",
                         "acteur":  "orchestrateur",
                         "action":  "Traitement T2 terminé. Conversation renommée « VMware vSphere – ESXi et vCenter ». Note communiquée : 15,5/20."
+                    },
+                    {
+                        "date":  "2026-11-05T18:16",
+                        "acteur":  "orchestrateur",
+                        "action":  "Dépôt git local initialisé (branche main, 1er commit). input/, work/ et archive/ exclus (supports protégés, captures avec mots de passe). En attente : URL du dépôt GitHub privé et dossier définitif du projet."
                     }
                 ]
 }
