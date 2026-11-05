@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T18:52",
+    "mis_a_jour":  "2026-11-05T19:12",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -116,6 +116,12 @@
                           "date":  "2026-11-05T18:50",
                           "statut":  "active",
                           "texte":  "Environnement de travail sur GitHub (LevGend/correction-cours, privé). L orchestrateur maintient le projet à jour : git pull au début de chaque session, commit + push après chaque modification du projet et à la fin de chaque traitement."
+                      },
+                      {
+                          "id":  "C20",
+                          "date":  "2026-11-05T19:11",
+                          "statut":  "active",
+                          "texte":  "Hub : page principale (output/index.html) pour naviguer entre les cours. Une question de révision après chaque sous-thème (différente du quiz, réponse dépliable). Quiz final créé par le professeur : une question QCM par sous-thème (deux si conséquent), découpé en plusieurs QCM de 20 questions ; réponses à la fin. Onglets en haut à droite : Cours, Quiz, Bilan \u0026 plus loin. Appliquer au cours VMware (fichiers de travail présents) ; Proxmox reste tel quel dans le Hub."
                       }
                   ],
     "regles_permanentes":  {
@@ -143,7 +149,8 @@
                                                   },
                                "concepts":  "Chaque concept : bloc :::concept avec @theorie / @pratique / @exemple ; exemple tiré du cours en priorité ; bouton Voir des exemples si exemple riche",
                                "notation":  "Compréhension /10 + Taux de prise de notes par chapitre /10 + bonus recherche perso jusqu à +3, plafond 20",
-                               "synchro_git":  "GitHub privé LevGend/correction-cours : pull au démarrage de chaque session (hook SessionStart, sinon l orchestrateur), commit + push après chaque modification et chaque traitement ; input/, work/, archive/ restent locaux"
+                               "synchro_git":  "GitHub privé LevGend/correction-cours : pull au démarrage de chaque session (hook SessionStart, sinon l orchestrateur), commit + push après chaque modification et chaque traitement ; input/, work/, archive/ restent locaux",
+                               "quiz":  "Étape 4 professeur (mission quiz) : 03_organise.md -\u003e 04_quiz.md (révision par H3 + QCM en séries de 20). Hub output/index.html régénéré par scripts/hub.ps1 après chaque publication."
                            },
     "traitements":  [
                         {
@@ -274,7 +281,18 @@
                                                                "remarques":  "",
                                                                "statut":  "termine",
                                                                "controle":  "OK"
-                                                           }
+                                                           },
+                                           "quiz":  {
+                                                        "statut":  "en_cours",
+                                                        "modele":  "opus",
+                                                        "raison_modele":  "professeur : toujours opus (exactitude critique)",
+                                                        "tentatives":  1,
+                                                        "sorties":  [
+                                                                        "work/04_quiz.md"
+                                                                    ],
+                                                        "controle":  "",
+                                                        "remarques":  "Ajout a posteriori (C20) sur le cours VMware"
+                                                    }
                                        },
                             "note":  "15,5",
                             "titre":  "VMware vSphere – ESXi et vCenter",
@@ -462,6 +480,16 @@
                         "date":  "2026-11-05T18:52",
                         "acteur":  "orchestrateur",
                         "action":  "C19 : hook SessionStart git pull ajouté (.claude/settings.json) avec l autorisation de l utilisateur, testé OK"
+                    },
+                    {
+                        "date":  "2026-11-05T19:11",
+                        "acteur":  "orchestrateur",
+                        "action":  "C20 enregistrée : Hub, questions de révision par sous-thème, quiz QCM en séries de 20, onglets Cours / Quiz / Bilan \u0026 plus loin"
+                    },
+                    {
+                        "date":  "2026-11-05T19:12",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur (mission quiz) lancé sur VMware, opus"
                     }
                 ]
 }

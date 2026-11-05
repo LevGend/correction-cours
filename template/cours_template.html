@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>{{TITRE}} – Correction IA</title>
+<meta name="cours-titre" content="{{TITRE}}">
+<meta name="cours-date" content="{{DATE}}">
+<meta name="cours-note" content="{{NOTE}}">
+<meta name="cours-themes" content="{{NB_THEMES}}">
+<meta name="cours-quiz" content="{{NB_QUIZ}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono&display=swap" rel="stylesheet">
 <style>
@@ -41,7 +46,10 @@ a{color:var(--primary);text-decoration:none} a:hover{text-decoration:underline}
 .tab:hover{color:#fff}
 .tab.active{color:#fff}
 .tab.active::after{content:"";position:absolute;left:12px;right:12px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--accent)}
-.chip-score{background:rgba(255,255,255,.12);border-radius:16px;padding:4px 12px;font-size:13px;font-weight:500;color:#fff;white-space:nowrap}
+.chip-score{background:rgba(255,255,255,.12);border-radius:16px;padding:4px 12px;font-size:13px;font-weight:500;color:#fff;white-space:nowrap;margin-left:auto}
+.chip-score+.tabs{margin-left:8px}
+.hub{flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;color:#fff;font-size:20px;background:rgba(255,255,255,.08);transition:background .15s}
+.hub:hover{background:rgba(255,255,255,.18);text-decoration:none}
 
 /* ===== Sommaire à 2 panneaux ===== */
 .toc{position:fixed;top:var(--appbar);bottom:0;left:0;width:520px;display:grid;grid-template-columns:240px 280px;z-index:10}
@@ -170,6 +178,50 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
 .bar{height:6px;background:var(--surface-3);border-radius:3px;overflow:hidden;margin-top:4px;min-width:80px}
 .bar i{display:block;height:100%;background:var(--primary);border-radius:3px}
 
+/* ===== Question de révision (fin de sous-thème) ===== */
+.revq{margin:18px 0 4px;background:var(--surface-2);border:1px dashed var(--primary);border-radius:var(--radius);padding:12px 18px}
+.revq-head{font:500 11px var(--font);letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.revq-head::before{content:"?";width:18px;height:18px;border-radius:50%;background:var(--primary);color:#fff;display:grid;place-items:center;font-size:12px;letter-spacing:0}
+.revq-q{font-weight:500}
+.revq-q>:last-child,.revq-r>:last-child{margin-bottom:0}
+.revq .btn-ex{margin:10px 0 0;border-color:var(--primary);color:var(--primary)}
+.revq .btn-ex:hover{background:var(--primary-soft)}
+.revq-r{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);color:var(--text-2)}
+.revq-r:not([hidden]){animation:fade .25s ease}
+
+/* ===== Page Quiz ===== */
+#page-quiz{max-width:1000px}
+.quiz-intro{color:var(--text-2)}
+.qcm{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;transition:border-color .2s}
+.qcm-head{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.qcm-num{font:500 12px var(--font);background:var(--primary);color:#fff;border-radius:12px;padding:2px 10px}
+.qcm-tag{font-size:12px;color:var(--text-3)}
+.qcm-text{font-weight:500;margin-bottom:10px}
+.qcm-text>:last-child{margin-bottom:0}
+.qcm-choices{display:grid;gap:6px}
+.choice{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);cursor:pointer;transition:background .15s,border-color .15s}
+.choice:hover{background:rgba(255,255,255,.04)}
+.choice input{position:absolute;opacity:0;pointer-events:none}
+.choice b{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:500;background:var(--surface-3);color:var(--text-2)}
+.choice:has(input:checked){border-color:var(--primary);background:var(--primary-soft)}
+.choice:has(input:checked) b{background:var(--primary);color:#fff}
+.choice:has(input:focus-visible){outline:2px solid var(--primary);outline-offset:2px}
+.qcm.checked .choice{cursor:default}
+.qcm.checked .choice.good{border-color:var(--ex);background:rgba(105,240,174,.10)}
+.qcm.checked .choice.good b{background:var(--ex);color:#000}
+.qcm.checked .choice.bad{border-color:var(--warn);background:rgba(255,82,82,.10)}
+.qcm.checked .choice.bad b{background:var(--warn);color:#fff}
+.qcm.ok{border-color:var(--ex)} .qcm.ko{border-color:var(--warn)} .qcm.skip{border-color:var(--text-3)}
+.quiz-actions{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:18px 0 4px}
+.btn-quiz{padding:9px 20px;border-radius:20px;border:0;cursor:pointer;font:500 13px var(--font);letter-spacing:.06em;text-transform:uppercase;background:var(--primary);color:#fff;transition:filter .15s}
+.btn-quiz:hover{filter:brightness(1.15)}
+.btn-quiz.ghost{background:transparent;border:1px solid var(--line);color:var(--text-2)}
+.quiz-score{font-size:15px;font-weight:500}
+.quiz-score b{font-size:22px;color:var(--accent)}
+.quiz-answers td:nth-child(2){font-weight:500;color:var(--ex);text-align:center;width:90px}
+.quiz-answers td:first-child{white-space:nowrap;width:70px}
+.quiz-answers:not([hidden]){animation:fade .25s ease}
+
 /* ===== Responsive ===== */
 @media (max-width:1100px){
   .appbar .menu{display:block}
@@ -179,19 +231,21 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
   .tab{padding:0 10px;font-size:12px} .chip-score,.brand small{display:none}
 }
 @media (max-width:700px){ .toc{width:100%;grid-template-columns:42% 58%} .eval-head,.cards-2{grid-template-columns:1fr} section.theme{padding:22px 18px} .tpe{grid-template-columns:1fr;gap:6px} .tpe-label{justify-self:start} }
-@media print{ .appbar,.toc,.btn-ex{display:none!important} .content{margin:0;padding:0} .page{display:block!important} .tpe[hidden]{display:grid} }
+@media print{ .appbar,.toc,.btn-ex,.quiz-actions{display:none!important} .content{margin:0;padding:0} .page{display:block!important} .tpe[hidden]{display:grid} .revq-r[hidden],.quiz-answers[hidden]{display:block} }
 </style>
 </head>
 <body>
 
 <header class="appbar">
   <button class="menu" aria-label="Sommaire" onclick="document.body.classList.toggle('toc-open')">☰</button>
+  <a class="hub" href="index.html" title="Tous les cours (Hub)" aria-label="Retour au Hub">⌂</a>
   <div class="brand"><b>{{TITRE}}</b><small>Notes corrigées · {{DATE}}</small></div>
+  <span class="chip-score">{{NOTE}}/20</span>
   <nav class="tabs">
     <button class="tab active" data-page="page-cours">Cours</button>
-    <button class="tab" data-page="page-eval">Évaluation &amp; plus loin</button>
+    <button class="tab" data-page="page-quiz">Quiz</button>
+    <button class="tab" data-page="page-eval">Bilan &amp; plus loin</button>
   </nav>
-  <span class="chip-score">{{NOTE}}/20</span>
 </header>
 
 <aside class="toc" id="toc">
@@ -237,7 +291,30 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
   <!-- CONTENU-COURS:FIN -->
 </main>
 
-<!-- ================= PAGE 2 : ÉVALUATION ================= -->
+<!-- ================= PAGE 2 : QUIZ ================= -->
+<main class="page" id="page-quiz">
+  <!-- CONTENU-QUIZ:DEBUT (le publieur remplace tout ce bloc) -->
+  <section class="theme quiz-serie" id="q-1"><h2>QCM 1</h2>
+    <p class="quiz-intro">2 questions · une seule bonne réponse par question</p>
+    <section class="sub" id="q-1-1"><h3>Questions</h3>
+      <div class="qcm" data-answer="B"><div class="qcm-head"><span class="qcm-num">Q1</span><span class="qcm-tag">Sous-thème A</span></div>
+        <div class="qcm-text"><p>Question de démonstration ?</p></div>
+        <div class="qcm-choices">
+          <label class="choice"><input type="radio" name="q-1-1" value="A"><b>A</b><span>Proposition</span></label>
+          <label class="choice"><input type="radio" name="q-1-1" value="B"><b>B</b><span>Bonne réponse</span></label>
+        </div></div>
+      <div class="quiz-actions"><button type="button" class="btn-quiz" data-act="check">Corriger</button><button type="button" class="btn-quiz ghost" data-act="reset">Recommencer</button><span class="quiz-score"></span></div>
+    </section>
+    <section class="sub" id="q-1-2"><h3>Réponses</h3>
+      <button type="button" class="btn-ex btn-ans" aria-expanded="false">Afficher les réponses</button>
+      <div class="quiz-answers" hidden><table><thead><tr><th>Question</th><th>Réponse</th><th>Explication</th></tr></thead>
+        <tbody><tr><td>Q1</td><td>B</td><td>Explication.</td></tr></tbody></table></div>
+    </section>
+  </section>
+  <!-- CONTENU-QUIZ:FIN -->
+</main>
+
+<!-- ================= PAGE 3 : BILAN & PLUS LOIN ================= -->
 <main class="page" id="page-eval">
   <!-- CONTENU-EVAL:DEBUT (le publieur remplace tout ce bloc) -->
   <section class="theme" id="e-1"><h2>Évaluation</h2>
@@ -387,12 +464,52 @@ body.no-colors .legend .chip:not(.static){opacity:.35;pointer-events:none}
     });
   }
 
+  // Questions de révision : « Voir la réponse »
+  $$('.revq > .btn-ex').forEach(b => b.addEventListener('click', () => {
+    const open = b.getAttribute('aria-expanded') !== 'true', box = b.nextElementSibling;
+    box.hidden = !open; b.setAttribute('aria-expanded', open);
+    b.textContent = open ? 'Masquer la réponse' : 'Voir la réponse';
+  }));
+
+  // Quiz : corriger / recommencer / réponses à la fin de chaque série
+  const setAns = (btn, open) => {
+    btn.nextElementSibling.hidden = !open; btn.setAttribute('aria-expanded', open);
+    btn.textContent = open ? 'Masquer les réponses' : 'Afficher les réponses';
+  };
+  $$('.btn-ans').forEach(b => b.addEventListener('click', () => setAns(b, b.getAttribute('aria-expanded') !== 'true')));
+  $$('.quiz-serie').forEach(serie => {
+    const qs = $$('.qcm', serie), out = $('.quiz-score', serie), ans = $('.btn-ans', serie);
+    $$('[data-act]', serie).forEach(btn => btn.addEventListener('click', () => {
+      const check = btn.dataset.act === 'check';
+      let ok = 0, done = 0;
+      qs.forEach(q => {
+        const good = q.dataset.answer, picked = $('input:checked', q);
+        q.classList.remove('ok', 'ko', 'skip', 'checked');
+        $$('.choice', q).forEach(c => c.classList.remove('good', 'bad'));
+        $$('input', q).forEach(i => { i.disabled = check; if (!check) i.checked = false; });
+        if (!check) return;
+        q.classList.add('checked');
+        $$('.choice', q).forEach(c => {
+          const v = $('input', c).value;
+          if (v === good) c.classList.add('good'); else if (picked && v === picked.value) c.classList.add('bad');
+        });
+        if (picked) { done++; if (picked.value === good) ok++; }
+        q.classList.add(!picked ? 'skip' : picked.value === good ? 'ok' : 'ko');
+      });
+      out.innerHTML = check ? `Score : <b>${ok}</b> / ${qs.length}` + (done < qs.length ? ` · ${qs.length - done} sans réponse` : '') : '';
+      if (ans) setAns(ans, check);
+      if (!check) serie.scrollIntoView({ behavior: 'smooth' });
+    }));
+  });
+  if (!$('.quiz-serie')) { const t = $('.tab[data-page="page-quiz"]'); if (t) t.remove(); }
+
   // Étiquette de langage sur les blocs de code
   $$('pre > code[class*="lang-"]').forEach(c => c.parentElement.dataset.lang = c.className.match(/lang-(\S+)/)[1]);
 
   // Ouverture directe sur une ancre
   const target = location.hash && document.getElementById(location.hash.slice(1));
-  if (target && target.closest('#page-eval')) showPage('page-eval'); else buildTitles();
+  const tp = target && target.closest('.page');
+  if (tp && tp.id !== 'page-cours') showPage(tp.id); else buildTitles();
   if (target) setTimeout(() => target.scrollIntoView(), 50);
 })();
 </script>

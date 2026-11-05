@@ -6,8 +6,9 @@ Pipeline Claude Code qui transforme des notes OneNote (+ supports de cours PDF) 
 - Agents : `.claude/agents/` (traducteur, professeur, évaluateur, organisateur, publieur)
 - Suivi des consignes et des traitements : `suivi.json`
 - Outils : `scripts/` (export OneNote, conversion HTML, mise à jour du suivi)
-- Gabarit : `template/cours_template.html`
-- Rendus : `output/COURS_CORRECTION_IA_DDMMYYYY_HHMM.html`
+- Gabarits : `template/cours_template.html` (un cours), `template/hub_template.html` (Hub)
+- Rendus : `output/COURS_CORRECTION_IA_DDMMYYYY_HHMM.html` (onglets Cours, Quiz, Bilan & plus loin)
+- Hub : `output/index.html`, page principale pour naviguer entre les cours
 
 ## Prérequis (Windows)
 - Git, Claude Code
