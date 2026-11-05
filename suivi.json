@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T21:20",
+    "mis_a_jour":  "2026-11-05T21:26",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -559,6 +559,16 @@
                         "date":  "2026-11-05T21:20",
                         "acteur":  "orchestrateur",
                         "action":  "Décision utilisateur : info-bulles des sigles affichées partout, y compris dans les QCM et le quiz (comportement actuel conservé)"
+                    },
+                    {
+                        "date":  "2026-11-05T21:21",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur (mission quiz, opus : toujours opus) lancé sur Proxmox (archive/T1_proxmox/03_organise.md -\u003e 04_quiz.md)"
+                    },
+                    {
+                        "date":  "2026-11-05T21:26",
+                        "acteur":  "orchestrateur",
+                        "action":  "Proxmox : 04_quiz.md (36 QCM de révision, 51 QCM en 3 séries de 17) contrôlé et publié ; Hub régénéré (105 questions). Aucun :::concept dans 02_corrige.md comme dans 03_organise.md (cours antérieur au format concept) : pas de perte. Testé navigateur : onglet Quiz, correction, 36 petites questions, aucune erreur"
                     }
                 ]
 }
