@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-05T21:26",
+    "mis_a_jour":  "2026-11-17T18:45",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -134,6 +134,12 @@
                           "date":  "2026-11-05T20:32",
                           "statut":  "active",
                           "texte":  "Le professeur fournit la liste des sigles du cours. Le chapitre 0 de chaque cours est « Lexique ». Chaque sigle affiche sa signification au survol de la souris. Dispatcher aux agents concernés (professeur, organisateur, publieur) et appliquer aux cours existants (VMware dans work/, Proxmox dans archive/T1_proxmox/)."
+                      },
+                      {
+                          "id":  "C23",
+                          "date":  "2026-11-17T18:45",
+                          "statut":  "active",
+                          "texte":  "Test : faire une vidéo qui explique le cours. Choix : cours VMware vSphere, MP4 avec voix Windows française (Hortense) + sous-titres incrustés, 3 à 5 minutes. FFmpeg installé via winget."
                       }
                   ],
     "regles_permanentes":  {
@@ -569,6 +575,16 @@
                         "date":  "2026-11-05T21:26",
                         "acteur":  "orchestrateur",
                         "action":  "Proxmox : 04_quiz.md (36 QCM de révision, 51 QCM en 3 séries de 17) contrôlé et publié ; Hub régénéré (105 questions). Aucun :::concept dans 02_corrige.md comme dans 03_organise.md (cours antérieur au format concept) : pas de perte. Testé navigateur : onglet Quiz, correction, 36 petites questions, aucune erreur"
+                    },
+                    {
+                        "date":  "2026-11-17T18:45",
+                        "acteur":  "orchestrateur",
+                        "action":  "C23 enregistrée : vidéo de test VMware (MP4, voix Hortense + sous-titres, 3-5 min). Script de la vidéo : professeur ; code de rendu : publieur"
+                    },
+                    {
+                        "date":  "2026-11-17T18:45",
+                        "acteur":  "orchestrateur",
+                        "action":  "FFmpeg 9.0.2 installé (winget, %LOCALAPPDATA%\\Microsoft\\WinGet\\Links\\ffmpeg.exe). Professeur (opus) lancé : work/05_video.md. Publieur (opus, nouvelle fonctionnalité) lancé en parallèle : scripts/video.ps1"
                     }
                 ]
 }

@@ -123,6 +123,30 @@ Explication : Une phrase qui justifie la bonne réponse.
 
 Termine par : le nombre de questions de révision, le nombre de questions de quiz et la taille de chaque série.
 
+## Mission 3 (vidéo, sur demande) : `work/05_video.md`
+Script d'une vidéo courte qui explique le cours, lue par une voix de synthèse française et sous-titrée. Entrée : `work/03_organise.md` (et `work/img/`). Format **exact** (un script le lit) :
+
+````
+# Vidéo : Titre du cours
+
+## Diapo 1 · Titre affiché
+Image : img/img_3.png
+- Point affiché à l'écran (8 mots au plus)
+- Point affiché
+Narration : Texte lu par la voix et affiché en sous-titres.
+
+## Prononciation
+| Écrit | Dit |
+|---|---|
+| ESXi | E S X i |
+| vSAN | vé san |
+````
+
+- 8 à 12 diapos : une d'introduction, une par grand thème (le Lexique n'en a pas), une de conclusion. Durée visée : celle demandée par l'orchestrateur (environ 150 mots lus par minute).
+- `Image :` facultatif, une capture **du cours** (`img/…` existant) quand elle aide à comprendre. 2 à 4 points par diapo.
+- Narration : phrases courtes et orales, tutoiement, pas de liste lue telle quelle, pas de code lu caractère par caractère. Tout se vérifie dans `03_organise.md` : n'invente rien.
+- `## Prononciation` : chaque sigle ou nom technique de la narration que la voix lirait mal, avec la façon de le dire (lettres séparées par des espaces, ou graphie phonétique). Les sous-titres gardent la graphie normale.
+
 ## Fin de mission
 L'évaluation (note, taux par chapitre, pistes) est faite par l'**évaluateur**, qui lit ton `02_corrige.md`. Tes balises doivent donc être exactes : c'est sur elles qu'il s'appuie.
 
