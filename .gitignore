@@ -8,3 +8,6 @@ archive/
 Thumbs.db
 desktop.ini
 *.tmp
+
+# Vidéos : lourdes, restent locales
+output/*.mp4

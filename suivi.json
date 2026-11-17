@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-17T18:45",
+    "mis_a_jour":  "2026-11-17T18:52",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -585,6 +585,16 @@
                         "date":  "2026-11-17T18:45",
                         "acteur":  "orchestrateur",
                         "action":  "FFmpeg 9.0.2 installé (winget, %LOCALAPPDATA%\\Microsoft\\WinGet\\Links\\ffmpeg.exe). Professeur (opus) lancé : work/05_video.md. Publieur (opus, nouvelle fonctionnalité) lancé en parallèle : scripts/video.ps1"
+                    },
+                    {
+                        "date":  "2026-11-17T18:48",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur : work/05_video.md (10 diapos, 4 captures, 52 prononciations) ; contrôle orchestrateur fait"
+                    },
+                    {
+                        "date":  "2026-11-17T18:52",
+                        "acteur":  "orchestrateur",
+                        "action":  "Publieur (opus) : scripts/video.ps1 + template/video_slide.html. Vidéo VMware générée : output/VIDEO_COURS_17112026_1851.mp4 (10 diapos, 5:09, 1920x1080 h264/aac, 74 sous-titres, 51 prononciations ; -Rate 0, la 1re version à -Rate -1 faisait 5:45). Contrôle ffprobe + 3 images vérifiées. MP4 exclus de git (.gitignore)"
                     }
                 ]
 }

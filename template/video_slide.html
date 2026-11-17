@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="color-scheme" content="dark">
+<title>{{TITRE}}</title>
+<style>
+/* Diapo video 1920x1080 - Material dark, inspiration Globals (coherent avec cours_template.html).
+   Aucune dependance reseau : polices locales (Roboto si installee, sinon Segoe UI). */
+:root{
+  --bg:#121212; --surface:#1d1d1f; --surface-2:#26262a; --surface-3:#303036;
+  --line:#3a3a42; --text:#e8e8ec; --text-2:#a9a9b3; --text-3:#7a7a85;
+  --primary:#448aff; --accent:#1de9b6;
+  --font:'Roboto','Segoe UI',system-ui,sans-serif;
+  --mono:'Roboto Mono',Consolas,'Cascadia Mono',monospace;
+  --sub-zone:210px; /* zone basse reservee aux sous-titres incrustes */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden}
+body{background:var(--bg);color:var(--text);font:400 30px/1.5 var(--font);-webkit-font-smoothing:antialiased;position:relative;
+  background:radial-gradient(1200px 700px at 85% -10%,rgba(68,138,255,.16),transparent 60%),
+             radial-gradient(900px 600px at -10% 110%,rgba(29,233,182,.08),transparent 60%),var(--bg)}
+/* Bandeau haut : titre du cours + numero, discrets */
+.top{position:absolute;left:0;right:0;top:0;height:96px;display:flex;align-items:center;gap:24px;padding:0 96px;
+  color:var(--text-3);font:500 22px var(--font);letter-spacing:.08em;text-transform:uppercase}
+.top .cours{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .num{flex:none;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.06);border:1px solid var(--line);
+  border-radius:20px;padding:4px 18px;letter-spacing:.04em}
+.top .bar{position:absolute;left:96px;right:96px;bottom:0;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+.top .bar i{display:block;height:100%;width:{{PROGRESS}}%;background:linear-gradient(90deg,var(--primary),var(--accent))}
+/* Zone de contenu : au-dessus de la zone des sous-titres */
+.stage{position:absolute;left:96px;right:96px;top:136px;bottom:var(--sub-zone);display:flex;flex-direction:column}
+h1{font:500 64px/1.15 var(--font);letter-spacing:-.01em;color:#fff;margin-bottom:12px}
+h1::after{content:"";display:block;width:96px;height:6px;border-radius:3px;margin-top:22px;
+  background:linear-gradient(90deg,var(--primary),var(--accent))}
+.body{flex:1;min-height:0;display:flex;gap:64px;align-items:center;margin-top:28px}
+.points{flex:1;min-width:0;list-style:none;display:flex;flex-direction:column;gap:26px}
+.points li{position:relative;padding-left:52px;font-size:38px;line-height:1.35;color:var(--text)}
+.points li::before{content:"";position:absolute;left:6px;top:.5em;width:18px;height:18px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 6px rgba(29,233,182,.14)}
+.points strong{color:#fff;font-weight:700}
+.points em{color:var(--text-2)}
+code{font-family:var(--mono);font-size:.84em;background:var(--surface-3);border:1px solid var(--line);padding:2px 12px;border-radius:8px;color:#fff}
+.media{flex:none;width:52%;height:100%;display:flex;align-items:center;justify-content:center;min-height:0}
+.media img{max-width:100%;max-height:100%;object-fit:contain;border-radius:18px;background:var(--surface);
+  border:1px solid var(--line);box-shadow:0 4px 12px rgba(0,0,0,.55),0 18px 48px rgba(0,0,0,.45)}
+.no-img .points li{font-size:44px}
+.no-img .body{max-width:1500px}
+/* Diapo 1 : titre de la video */
+.title-slide .stage{justify-content:center;top:96px}
+.title-slide .kicker{font:500 26px var(--font);letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.title-slide h1{font-size:96px;font-weight:300;max-width:1500px}
+.title-slide h1::after{width:140px;height:8px;margin-top:36px}
+.title-slide .sub{font:400 44px/1.3 var(--font);color:var(--text-2);margin-top:28px;max-width:1500px}
+.title-slide .body{flex:none;margin-top:44px}
+.title-slide .points li{font-size:34px;color:var(--text-2)}
+.title-slide .media{height:520px}
+</style>
+</head>
+<body class="{{CLASSES}}">
+<div class="top"><span class="cours">{{COURS}}</span><span class="num">{{NUM}} / {{TOTAL}}</span><div class="bar"><i></i></div></div>
+<div class="stage">
+{{HEAD}}
+<div class="body">
+{{POINTS}}
+{{IMAGE}}
+</div>
+</div>
+</body>
+</html>
