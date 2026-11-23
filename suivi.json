@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-17T18:52",
+    "mis_a_jour":  "2026-11-23T12:48",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -140,6 +140,12 @@
                           "date":  "2026-11-17T18:45",
                           "statut":  "active",
                           "texte":  "Test : faire une vidéo qui explique le cours. Choix : cours VMware vSphere, MP4 avec voix Windows française (Hortense) + sous-titres incrustés, 3 à 5 minutes. FFmpeg installé via winget."
+                      },
+                      {
+                          "id":  "C24",
+                          "date":  "2026-11-23T12:33",
+                          "statut":  "active",
+                          "texte":  "Traiter le cours Administration Linux (Sup2Vinci, semaine 3) : dossier Documents\\Sup2Vinci\\Semaine 3\\Administration Linux. L\u0027Ã©tudiant a fait crÃ©er un rapport .md (Rapport-TP-Jour2.md) de ce qu\u0027il a fait. Lancer le pipeline complet."
                       }
                   ],
     "regles_permanentes":  {
@@ -317,6 +323,92 @@
                             "note":  "15,5",
                             "titre":  "VMware vSphere – ESXi et vCenter",
                             "fichier_final":  "output/COURS_CORRECTION_IA_05112026_1723.html",
+                            "statut":  "termine"
+                        },
+                        {
+                            "id":  "T3",
+                            "debut":  "2026-11-23T12:33",
+                            "fichiers_entree":  [
+                                                    "input/Export.one (OneNote : 1 page, 2 lignes, accÃ¨s SSH)",
+                                                    "input/Rapport-TP-Jour2.md (rapport de TP rÃ©digÃ© avec une IA Ã  partir de ce que l\u0027Ã©tudiant a fait, T09 Ã  T11)",
+                                                    "input/option domain-name nordlog.lan;.txt (brouillon dhcpd.conf de l\u0027Ã©tudiant)"
+                                                ],
+                            "support_cours":  "input/support : NordLog-Jour-2-TD.docx (texte dans work/support/, 7 images non extraites), Solutions-TP-Jour2.md. Jour 1 TD copiÃ© mais hors pÃ©rimÃ¨tre (aucune note sur le Jour 1). PDF Postes-et-IP exclu (liste nominative des Ã©tudiants, dÃ©pÃ´t public).",
+                            "preparation":  {
+                                                "methode":  "OneNote COM -\u003e work/xml -\u003e work/00_source.txt ; docx -\u003e texte (python zipfile) ; pdftotext",
+                                                "remarque":  "PÃ©rimÃ¨tre : Jour 2, tickets T09 Ã  T11 (matinÃ©e). T12 Ã  T16 non faits : ils ne comptent pas dans le taux et vont dans Pour aller plus loin. Les deux NordLog-Jour-1-TD.docx ont le mÃªme texte."
+                                            },
+                            "etapes":  {
+                                           "traducteur":  {
+                                                              "modele":  "haiku",
+                                                              "raison_modele":  "Texte seul, sources dÃ©jÃ  en Markdown ou texte brut, pas d\u0027images",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "statut":  "termine",
+                                                              "controle":  "OK : rapport recopié intégralement (diff = lignes vides), support T09-T16 + mémo + solutions",
+                                                              "tentatives":  "1"
+                                                          },
+                                           "professeur":  {
+                                                              "modele":  "opus",
+                                                              "raison_modele":  "Toujours opus",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "statut":  "termine",
+                                                              "tentatives":  "1",
+                                                              "controle":  "OK : balises 41/41 span, 10/10 div, 7/7 del ; 10 concepts avec theorie+pratique ; titres identiques à 01_notes ; 19 sigles triés, tous présents. Remarque : div.perso et div.fix utilisés"
+                                                          },
+                                           "evaluateur":  {
+                                                              "modele":  "sonnet",
+                                                              "raison_modele":  "DÃ©faut (support ~38 Ko)",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "statut":  "termine",
+                                                              "tentatives":  "1",
+                                                              "controle":  "OK : format conforme, 19/20 = 8 + 8,5 + 2,5, taux sur T09-T11, URL vérifiées"
+                                                          },
+                                           "organisateur":  {
+                                                                "modele":  "sonnet",
+                                                                "raison_modele":  "DÃ©faut",
+                                                                "sorties":  [
+
+                                                                            ],
+                                                                "remarques":  "",
+                                                                "statut":  "termine",
+                                                                "tentatives":  "1",
+                                                                "controle":  "OK : balises identiques (41 span, 10 div, 7 del), 10 concepts, Lexique en ch. 0 avec Sigles identique, chaque H2 a un H3, titre 35 car."
+                                                            },
+                                           "quiz":  {
+                                                        "modele":  "opus",
+                                                        "raison_modele":  "Professeur : toujours opus",
+                                                        "sorties":  [
+
+                                                                    ],
+                                                        "remarques":  "",
+                                                        "statut":  "termine",
+                                                        "tentatives":  "1",
+                                                        "controle":  "OK : 29 révision (1 par H3, titres identiques), 40 quiz en 2 séries de 20, 69 réponses A-D"
+                                                    },
+                                           "publication":  {
+                                                               "modele":  "script",
+                                                               "raison_modele":  "md2html.ps1, publieur seulement si bug",
+                                                               "sorties":  [
+
+                                                                           ],
+                                                               "remarques":  "",
+                                                               "statut":  "termine",
+                                                               "tentatives":  "1",
+                                                               "controle":  "OK : md2html + hub sans erreur ; navigateur : 3 onglets, 10 .concept, 11 boutons Voir des exemples, 209 info-bulles (LPF, RR seulement dans le code), 29/29 révisions, 40 QCM (20+20), Corriger affiche le score, aucun {{…}}, aucune erreur console ; Hub liste le cours"
+                                                           }
+                                       },
+                            "titre":  "Linux – Services réseau et pare-feu",
+                            "note":  "19",
+                            "fichier_final":  "output/COURS_CORRECTION_IA_23112026_1247.html",
                             "statut":  "termine"
                         }
                     ],
@@ -595,6 +687,36 @@
                         "date":  "2026-11-17T18:52",
                         "acteur":  "orchestrateur",
                         "action":  "Publieur (opus) : scripts/video.ps1 + template/video_slide.html. Vidéo VMware générée : output/VIDEO_COURS_17112026_1851.mp4 (10 diapos, 5:09, 1920x1080 h264/aac, 74 sous-titres, 51 prononciations ; -Rate 0, la 1re version à -Rate -1 faisait 5:45). Contrôle ffprobe + 3 images vérifiées. MP4 exclus de git (.gitignore)"
+                    },
+                    {
+                        "date":  "2026-11-23T12:33",
+                        "acteur":  "orchestrateur",
+                        "action":  "T3 dÃ©marrÃ© (C24) : entrÃ©es copiÃ©es dans input/, OneNote exportÃ© (1 page, 2 lignes), supports extraits dans work/support/. PÃ©rimÃ¨tre Jour 2 T09-T11."
+                    },
+                    {
+                        "date":  "2026-11-23T12:33",
+                        "acteur":  "orchestrateur",
+                        "action":  "Traducteur lancé (haiku)"
+                    },
+                    {
+                        "date":  "2026-11-23T12:36",
+                        "acteur":  "orchestrateur",
+                        "action":  "Traducteur terminé, contrôle OK. Professeur lancé (opus)"
+                    },
+                    {
+                        "date":  "2026-11-23T12:42",
+                        "acteur":  "orchestrateur",
+                        "action":  "Professeur terminé (perso 22, fix 8, ai 18, hors 3), contrôle OK. Évaluateur (sonnet) et organisateur (sonnet) lancés en parallèle"
+                    },
+                    {
+                        "date":  "2026-11-23T12:44",
+                        "acteur":  "orchestrateur",
+                        "action":  "Évaluateur (19/20) et organisateur terminés, contrôles OK. Professeur quiz (opus) lancé"
+                    },
+                    {
+                        "date":  "2026-11-23T12:48",
+                        "acteur":  "orchestrateur",
+                        "action":  "T3 terminé : output/COURS_CORRECTION_IA_23112026_1247.html, note 19/20, Hub régénéré (3 cours)"
                     }
                 ]
 }
