@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-23T14:26",
+    "mis_a_jour":  "2026-11-23T14:41",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -426,7 +426,6 @@
                         {
                             "id":  "T4",
                             "debut":  "2026-11-23T14:02",
-                            "statut":  "en_cours",
                             "remplace":  "T3",
                             "fichiers_entree":  [
                                                     "Notes Ã©tudiant inchangÃ©es (work/01_notes.md de T3 : OneNote + rapport T09-T11 + brouillon dhcpd.conf)",
@@ -483,31 +482,32 @@
                                                                 "controle":  "OK : décomptes identiques (76 concepts, 102 span, 195 div, 7 del), Lexique identique, chaque H2 a un H3, titre 38 car."
                                                             },
                                            "quiz":  {
-                                                        "statut":  "en_attente",
                                                         "modele":  "opus",
                                                         "raison_modele":  "Professeur : toujours opus",
-                                                        "tentatives":  0,
                                                         "sorties":  [
 
                                                                     ],
-                                                        "controle":  "",
-                                                        "remarques":  ""
+                                                        "remarques":  "",
+                                                        "statut":  "termine",
+                                                        "tentatives":  "1",
+                                                        "controle":  "OK : 56 révision (titres identiques), 80 quiz en 4 séries de 20, 136 réponses ; 2 questions Ansible (règle 1 par sous-thème)"
                                                     },
                                            "publication":  {
-                                                               "statut":  "en_attente",
                                                                "modele":  "script",
                                                                "raison_modele":  "md2html.ps1, publieur seulement si bug",
-                                                               "tentatives":  0,
                                                                "sorties":  [
 
                                                                            ],
-                                                               "controle":  "",
-                                                               "remarques":  ""
+                                                               "remarques":  "",
+                                                               "statut":  "termine",
+                                                               "tentatives":  "1",
+                                                               "controle":  "OK : md2html + hub ; navigateur : 12 thèmes (Lexique 0), 76 .concept, 69 boutons Voir des exemples, 480 info-bulles (LPF, RR seulement dans le code), 56/56 révisions, 80 QCM (4 x 20), Corriger affiche le score, note 12 sur 20, aucun {{…}}, aucune erreur console ; Hub à jour"
                                                            }
                                        },
-                            "titre":  "",
-                            "fichier_final":  "",
-                            "note":  "12"
+                            "note":  "12",
+                            "titre":  "Linux – Administration AlmaLinux J1-J3",
+                            "fichier_final":  "output/COURS_CORRECTION_IA_23112026_1440.html",
+                            "statut":  "termine"
                         }
                     ],
     "journal":  [
@@ -840,6 +840,16 @@
                         "date":  "2026-11-23T14:26",
                         "acteur":  "orchestrateur",
                         "action":  "Évaluateur (12/20) et organisateur terminés, contrôles OK. Arrêt : limite d\u0027usage atteinte. Restent quiz (professeur opus), publication, Hub, commit/push ; l\u0027ancien cours T3 est encore dans output/"
+                    },
+                    {
+                        "date":  "2026-11-23T14:33",
+                        "acteur":  "orchestrateur",
+                        "action":  "Reprise T4 : professeur quiz (opus) lancé"
+                    },
+                    {
+                        "date":  "2026-11-23T14:41",
+                        "acteur":  "orchestrateur",
+                        "action":  "T4 terminé : output/COURS_CORRECTION_IA_23112026_1440.html (12/20). Ancienne page T3 (COURS_CORRECTION_IA_23112026_1247.html) retirée de output/, conservée dans l\u0027historique git et archive/T3_linux_j2"
                     }
                 ]
 }
