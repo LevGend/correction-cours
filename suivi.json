@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-23T12:48",
+    "mis_a_jour":  "2026-11-23T13:46",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -717,6 +717,11 @@
                         "date":  "2026-11-23T12:48",
                         "acteur":  "orchestrateur",
                         "action":  "T3 terminé : output/COURS_CORRECTION_IA_23112026_1247.html, note 19/20, Hub régénéré (3 cours)"
+                    },
+                    {
+                        "date":  "2026-11-23T13:46",
+                        "acteur":  "orchestrateur",
+                        "action":  "C25 (utilisateur : « vas y finit le tp ») : T12, T13, T14 serveur, T15 serveur, T16 serveur réalisés sur srv-infra par SSH ; incident trouvé sur cli-01 (règles iptables de T11 appliquées, tunnel VXLAN coupé), suppression refusée par le mode auto, laissée à l\u0027étudiant ; rapport Rapport-TP-Jour2.md complété (T12-T16 + reste à faire). Journaux dans work/tp_logs/"
                     }
                 ]
 }
