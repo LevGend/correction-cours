@@ -1,7 +1,7 @@
 {
     "projet":  "Correction IA de notes de cours",
     "version_suivi":  1,
-    "mis_a_jour":  "2026-11-23T13:46",
+    "mis_a_jour":  "2026-11-23T14:26",
     "consignes":  [
                       {
                           "id":  "C1",
@@ -146,6 +146,18 @@
                           "date":  "2026-11-23T12:33",
                           "statut":  "active",
                           "texte":  "Traiter le cours Administration Linux (Sup2Vinci, semaine 3) : dossier Documents\\Sup2Vinci\\Semaine 3\\Administration Linux. L\u0027Ã©tudiant a fait crÃ©er un rapport .md (Rapport-TP-Jour2.md) de ce qu\u0027il a fait. Lancer le pipeline complet."
+                      },
+                      {
+                          "id":  "C26",
+                          "date":  "2026-11-23T14:02",
+                          "statut":  "active",
+                          "texte":  "Nouveaux fichiers sources (CLARISSE-ADMIN-LINUX : TD jours 1 Ã  3, rÃ©caps, aide-mÃ©moire, exercices). Faire un point avec les agents pour retravailler le cours, les quiz et le bilan. PÃ©rimÃ¨tre choisi : module complet J1 Ã  J3, taux de prise de notes calculÃ© sur tout le module."
+                      },
+                      {
+                          "id":  "C27",
+                          "date":  "2026-11-23T14:02",
+                          "statut":  "active",
+                          "texte":  "Les parties T12 Ã  T16 du rapport, rÃ©digÃ©es par l\u0027IA le 23/11 (travaux faits sur les VM), ne sont pas des notes de l\u0027Ã©tudiant : matiÃ¨re pour le cours, mais ni dans le taux ni dans le bonus."
                       }
                   ],
     "regles_permanentes":  {
@@ -410,6 +422,92 @@
                             "note":  "19",
                             "fichier_final":  "output/COURS_CORRECTION_IA_23112026_1247.html",
                             "statut":  "termine"
+                        },
+                        {
+                            "id":  "T4",
+                            "debut":  "2026-11-23T14:02",
+                            "statut":  "en_cours",
+                            "remplace":  "T3",
+                            "fichiers_entree":  [
+                                                    "Notes Ã©tudiant inchangÃ©es (work/01_notes.md de T3 : OneNote + rapport T09-T11 + brouillon dhcpd.conf)",
+                                                    "work/01_tp_ia.md : compte rendu T12-T16 rÃ©digÃ© par l\u0027IA (C27)"
+                                                ],
+                            "support_cours":  "input/support/module (copie de CLARISSE-ADMIN-LINUX) -\u003e work/support2/*.txt : TD J1, J2, J3-v2, Commandes J1-J3 v2, Bilan J1-J2 et programme J3, Aide-mÃ©moire, Installer ses VM, cours-exercices Red Hat v2, exercices v4 + Solutions TP J2. Exclus : Postes-et-IP (noms), Codes personnels du test de positionnement, TD Minecraft (autre module, Ubuntu), versions remplacÃ©es (J3 v1, exercices v3, cours Debian/Red Hat v1).",
+                            "preparation":  {
+                                                "methode":  "T3 archivÃ© dans archive/T3_linux_j2 ; docx -\u003e texte (python zipfile), pdftotext",
+                                                "remarque":  "PÃ©rimÃ¨tre C26 : module complet, taux sur tout. Notes de l\u0027Ã©tudiant limitÃ©es au Jour 2 (T09-T11)."
+                                            },
+                            "etapes":  {
+                                           "traducteur":  {
+                                                              "modele":  "sonnet",
+                                                              "raison_modele":  "Support volumineux (~400 Ko, plus de 20 pages) Ã  condenser",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "statut":  "termine",
+                                                              "tentatives":  "1",
+                                                              "controle":  "OK : 01_support.md 233 Ko, T02-T22 + bonus Ansible, 4 parties, aucune liste nominative ; 01_notes.md inchangé"
+                                                          },
+                                           "professeur":  {
+                                                              "modele":  "opus",
+                                                              "raison_modele":  "Toujours opus",
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "3 agents en parallèle : 02_corrige_J1.md, 02_corrige_J2.md, 02_corrige_J3.md + sigles, fusionnés ensuite",
+                                                              "statut":  "termine",
+                                                              "tentatives":  "1",
+                                                              "controle":  "OK après fusion J1+J2+J3 : 76 concepts complets, span 102/102, div 195/195, del 7/7, 180 délimiteurs de code, 47 sigles triés tous présents (perso 23, fix 8, ai 242, hors 24)"
+                                                          },
+                                           "evaluateur":  {
+                                                              "modele":  "opus",
+                                                              "raison_modele":  "Notation dÃ©licate : module entier, notes partielles, part IA Ã  exclure",
+                                                              "tentatives":  0,
+                                                              "sorties":  [
+
+                                                                          ],
+                                                              "remarques":  "",
+                                                              "statut":  "termine",
+                                                              "controle":  "OK : format conforme, 12/20 = 8 + 2 + 2, 21 tickets, taux 17,9 %"
+                                                          },
+                                           "organisateur":  {
+                                                                "modele":  "opus",
+                                                                "raison_modele":  "Contenu trÃ¨s long (3 jours, beaucoup de complÃ©ments)",
+                                                                "tentatives":  0,
+                                                                "sorties":  [
+
+                                                                            ],
+                                                                "remarques":  "",
+                                                                "statut":  "termine",
+                                                                "controle":  "OK : décomptes identiques (76 concepts, 102 span, 195 div, 7 del), Lexique identique, chaque H2 a un H3, titre 38 car."
+                                                            },
+                                           "quiz":  {
+                                                        "statut":  "en_attente",
+                                                        "modele":  "opus",
+                                                        "raison_modele":  "Professeur : toujours opus",
+                                                        "tentatives":  0,
+                                                        "sorties":  [
+
+                                                                    ],
+                                                        "controle":  "",
+                                                        "remarques":  ""
+                                                    },
+                                           "publication":  {
+                                                               "statut":  "en_attente",
+                                                               "modele":  "script",
+                                                               "raison_modele":  "md2html.ps1, publieur seulement si bug",
+                                                               "tentatives":  0,
+                                                               "sorties":  [
+
+                                                                           ],
+                                                               "controle":  "",
+                                                               "remarques":  ""
+                                                           }
+                                       },
+                            "titre":  "",
+                            "fichier_final":  "",
+                            "note":  "12"
                         }
                     ],
     "journal":  [
@@ -722,6 +820,26 @@
                         "date":  "2026-11-23T13:46",
                         "acteur":  "orchestrateur",
                         "action":  "C25 (utilisateur : « vas y finit le tp ») : T12, T13, T14 serveur, T15 serveur, T16 serveur réalisés sur srv-infra par SSH ; incident trouvé sur cli-01 (règles iptables de T11 appliquées, tunnel VXLAN coupé), suppression refusée par le mode auto, laissée à l\u0027étudiant ; rapport Rapport-TP-Jour2.md complété (T12-T16 + reste à faire). Journaux dans work/tp_logs/"
+                    },
+                    {
+                        "date":  "2026-11-23T14:02",
+                        "acteur":  "orchestrateur",
+                        "action":  "Point C26/C27 : dÃ©cisions de pÃ©rimÃ¨tre prises avec l\u0027utilisateur (module complet, taux sur tout, T12-T16 IA exclus de la note). T3 archivÃ©. T4 dÃ©marrÃ©."
+                    },
+                    {
+                        "date":  "2026-11-23T14:12",
+                        "acteur":  "orchestrateur",
+                        "action":  "Traducteur terminé, contrôle OK. Professeur découpé en 3 agents opus parallèles (J1, J2, J3), fusion par l\u0027orchestrateur"
+                    },
+                    {
+                        "date":  "2026-11-23T14:19",
+                        "acteur":  "orchestrateur",
+                        "action":  "Point des professeurs : J1 28 concepts, J2 24 (6 éléments perso -\u003e cours après revue, T12-T16 en ai + exemples réels en hors), J3 24 (T21 = at). Recommandations : quiz orienté diagnostic Jour 4, bilan signale J1, J3 et T12-T16 non notés. Évaluateur (opus) et organisateur (opus) lancés"
+                    },
+                    {
+                        "date":  "2026-11-23T14:26",
+                        "acteur":  "orchestrateur",
+                        "action":  "Évaluateur (12/20) et organisateur terminés, contrôles OK. Arrêt : limite d\u0027usage atteinte. Restent quiz (professeur opus), publication, Hub, commit/push ; l\u0027ancien cours T3 est encore dans output/"
                     }
                 ]
 }
